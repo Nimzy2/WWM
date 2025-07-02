@@ -23,4 +23,27 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-30px); }
+}
+.float-animate {
+  animation: float 5s ease-in-out infinite;
+}
+.float-animate-delay-1 {
+  animation-delay: 1s;
+}
+.float-animate-delay-2 {
+  animation-delay: 2s;
+}
+.float-animate-delay-3 {
+  animation-delay: 3s;
+}
+.float-animate-delay-4 {
+  animation-delay: 4s;
+}
+.float-animate-delay-5 {
+  animation-delay: 5s;
 } 
