@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import NewsletterSignup from './NewsletterSignup';
 
 const statsData = [
   { label: 'Members', value: 12000 },
@@ -96,26 +97,7 @@ const Home = () => {
     return () => intervals.forEach(clearInterval);
   }, []);
 
-  // Newsletter Signup
-  const [email, setEmail] = useState('');
-  const [emailError, setEmailError] = useState('');
-  const [newsletterMsg, setNewsletterMsg] = useState('');
 
-  const validateEmail = (email) => {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  };
-
-  const handleNewsletter = (e) => {
-    e.preventDefault();
-    setNewsletterMsg('');
-    if (!validateEmail(email)) {
-      setEmailError('Please enter a valid email address.');
-      return;
-    }
-    setEmailError('');
-    setNewsletterMsg('Thank you for subscribing!');
-    setEmail('');
-  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -226,28 +208,11 @@ const Home = () => {
       {/* Newsletter Signup */}
       <section className="py-16 bg-primary">
         <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-2xl md:text-3xl font-bold mb-4 text-white animate-fade-in">Stay Updated</h2>
-          <p className="text-accent mb-6 animate-fade-in delay-200">
-            Subscribe to our newsletter for the latest updates, stories, and opportunities.
-          </p>
-          <form className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto animate-fade-in-up" onSubmit={handleNewsletter}>
-            <input
-              type="email"
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              placeholder="Enter your email"
-              className="flex-1 px-4 py-2 rounded-lg text-primary focus:outline-none focus:ring-2 focus:ring-accent"
-              required
-            />
-            <button
-              type="submit"
-              className="bg-white text-primary px-6 py-2 rounded-lg font-semibold hover:bg-accent hover:text-white transition-colors duration-200"
-            >
-              Subscribe
-            </button>
-          </form>
-          {emailError && <div className="text-red-200 mt-2 animate-fade-in">{emailError}</div>}
-          {newsletterMsg && <div className="text-accent mt-2 animate-fade-in">{newsletterMsg}</div>}
+          <NewsletterSignup 
+            variant="default"
+            title="Stay Updated"
+            subtitle="Subscribe to our newsletter for the latest updates, stories, and opportunities."
+          />
         </div>
       </section>
     </div>

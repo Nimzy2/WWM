@@ -1,7 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { fetchJoinRequests, addJoinRequest } from '../supabaseHelpers';
+import { supabase } from '../supabaseClient';
 
 const Admin = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
+  const [joinRequests, setJoinRequests] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const stats = {
     totalMembers: 10450,
@@ -27,12 +31,47 @@ const Admin = () => {
 
   const tabs = [
     { id: 'dashboard', label: 'Dashboard', icon: '📊' },
+    { id: 'join-requests', label: 'Join Requests', icon: '📝' },
     { id: 'members', label: 'Members', icon: '👥' },
     { id: 'events', label: 'Events', icon: '📅' },
     { id: 'content', label: 'Content', icon: '📝' },
     { id: 'analytics', label: 'Analytics', icon: '📈' },
     { id: 'settings', label: 'Settings', icon: '⚙️' }
   ];
+
+  // Fetch join requests on component mount
+  useEffect(() => {
+    fetchJoinRequestsData();
+  }, []);
+
+  const fetchJoinRequestsData = async () => {
+    setLoading(true);
+    try {
+      const data = await fetchJoinRequests();
+      setJoinRequests(data);
+    } catch (error) {
+      console.error('Error fetching join requests:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleStatusUpdate = async (requestId, newStatus) => {
+    try {
+      // Update the status in Supabase
+      const { error } = await supabase
+        .from('join_requests')
+        .update({ status: newStatus })
+        .eq('id', requestId);
+      
+      if (error) throw error;
+      
+      // Refresh the data
+      fetchJoinRequestsData();
+    } catch (error) {
+      console.error('Error updating status:', error);
+    }
+  };
 
   const renderDashboard = () => (
     <div className="space-y-8">
@@ -140,6 +179,121 @@ const Admin = () => {
           </div>
         </div>
       </div>
+    </div>
+  );
+
+  const renderJoinRequests = () => (
+    <div className="bg-white rounded-lg shadow-md p-6">
+      <div className="flex justify-between items-center mb-6">
+        <h3 className="text-xl font-bold text-primary">Join Requests</h3>
+        <div className="flex space-x-2">
+          <span className="text-sm text-accent">
+            {joinRequests.filter(r => r.status === 'pending').length} pending
+          </span>
+          <button 
+            onClick={fetchJoinRequestsData}
+            className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-accent hover:text-primary transition-colors duration-200"
+          >
+            Refresh
+          </button>
+        </div>
+      </div>
+      
+      {loading ? (
+        <div className="text-center py-8">
+          <p className="text-accent">Loading join requests...</p>
+        </div>
+      ) : joinRequests.length === 0 ? (
+        <div className="text-center py-8">
+          <p className="text-accent">No join requests found.</p>
+        </div>
+      ) : (
+        <div className="space-y-4">
+          {joinRequests.map((request) => (
+            <div key={request.id} className="border border-accent rounded-lg p-6">
+              <div className="flex justify-between items-start mb-4">
+                <div>
+                  <h4 className="text-lg font-semibold text-primary">
+                    {request.first_name} {request.last_name}
+                  </h4>
+                  <p className="text-accent">{request.email}</p>
+                  <p className="text-sm text-text">{request.phone} • {request.county}</p>
+                  {request.organization && (
+                    <p className="text-sm text-text">Organization: {request.organization}</p>
+                  )}
+                </div>
+                <div className="text-right">
+                  <span className={`text-xs px-2 py-1 rounded-full ${
+                    request.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                    request.status === 'approved' ? 'bg-green-100 text-green-800' :
+                    request.status === 'rejected' ? 'bg-red-100 text-red-800' :
+                    'bg-blue-100 text-blue-800'
+                  }`}>
+                    {request.status}
+                  </span>
+                  <p className="text-xs text-accent mt-1">
+                    {new Date(request.created_at).toLocaleDateString()}
+                  </p>
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div>
+                  <p className="text-sm font-semibold text-primary mb-1">Involvement Level:</p>
+                  <p className="text-sm text-text capitalize">{request.involvement_level}</p>
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-primary mb-1">Areas of Interest:</p>
+                  <div className="flex flex-wrap gap-1">
+                    {request.interests.map((interest, index) => (
+                      <span key={index} className="text-xs bg-accent text-primary px-2 py-1 rounded">
+                        {interest}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              
+              {request.skills && (
+                <div className="mb-4">
+                  <p className="text-sm font-semibold text-primary mb-1">Skills Offered:</p>
+                  <p className="text-sm text-text">{request.skills}</p>
+                </div>
+              )}
+              
+              {request.motivation && (
+                <div className="mb-4">
+                  <p className="text-sm font-semibold text-primary mb-1">Motivation:</p>
+                  <p className="text-sm text-text">{request.motivation}</p>
+                </div>
+              )}
+              
+              {request.status === 'pending' && (
+                <div className="flex space-x-2">
+                  <button
+                    onClick={() => handleStatusUpdate(request.id, 'approved')}
+                    className="bg-green-500 text-white px-3 py-1 rounded text-sm hover:bg-green-600"
+                  >
+                    Approve
+                  </button>
+                  <button
+                    onClick={() => handleStatusUpdate(request.id, 'rejected')}
+                    className="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600"
+                  >
+                    Reject
+                  </button>
+                  <button
+                    onClick={() => handleStatusUpdate(request.id, 'contacted')}
+                    className="bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600"
+                  >
+                    Mark Contacted
+                  </button>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 
@@ -312,6 +466,8 @@ const Admin = () => {
     switch (activeTab) {
       case 'dashboard':
         return renderDashboard();
+      case 'join-requests':
+        return renderJoinRequests();
       case 'members':
         return renderMembers();
       case 'events':
