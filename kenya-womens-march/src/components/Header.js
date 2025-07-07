@@ -11,7 +11,6 @@ const Header = () => {
     { path: '/blogs', label: 'Blogs' },
     { path: '/contact', label: 'Contact' },
     { path: '/join', label: 'Join' },
-    { path: '/admin', label: 'Admin' },
   ];
 
   const isActive = (path) => location.pathname === path;
@@ -23,8 +22,15 @@ const Header = () => {
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
             <div className="flex-shrink-0">
-              <Link to="/" className="text-xl font-bold">
-                World March of Women Kenya
+              <Link to="/" className="flex items-center">
+                <img 
+                  src="/WMW-New Logo.jpg" 
+                  alt="World March of Women Kenya Logo" 
+                  className="h-12 w-auto mr-3"
+                />
+                <span className="text-xl font-bold hidden sm:block">
+                  World March of Women Kenya
+                </span>
               </Link>
             </div>
 

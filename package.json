@@ -1,5 +1,9 @@
 {
   "dependencies": {
-    "@supabase/supabase-js": "^2.50.2"
+    "@supabase/supabase-js": "^2.50.2",
+    "@tailwindcss/typography": "^0.5.16",
+    "dompurify": "^3.2.6",
+    "marked": "^16.0.0",
+    "react-markdown": "^10.1.0"
   }
 }

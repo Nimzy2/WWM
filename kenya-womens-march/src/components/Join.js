@@ -10,14 +10,13 @@ const Join = () => {
     county: '',
     involvementLevel: '',
     interests: [],
-    skills: '',
-    motivation: '',
     organization: ''
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
   const [errors, setErrors] = useState({});
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const counties = [
     'Nairobi', 'Mombasa', 'Kisumu', 'Nakuru', 'Eldoret', 'Thika', 'Nyeri', 'Kakamega',
@@ -54,51 +53,6 @@ const Join = () => {
     'Entrepreneurship Support'
   ];
 
-  const volunteerOpportunities = [
-    {
-      title: 'Event Coordination',
-      description: 'Help organize workshops, seminars, and community events',
-      location: 'Various locations',
-      commitment: 'Flexible hours',
-      skills: 'Organization, communication, leadership'
-    },
-    {
-      title: 'Community Outreach',
-      description: 'Connect with women in rural areas and urban communities',
-      location: 'All counties',
-      commitment: 'Weekends and evenings',
-      skills: 'Communication, empathy, cultural sensitivity'
-    },
-    {
-      title: 'Social Media & Content',
-      description: 'Create content and manage our social media presence',
-      location: 'Remote',
-      commitment: '5-10 hours/week',
-      skills: 'Digital marketing, content creation, social media'
-    },
-    {
-      title: 'Fundraising',
-      description: 'Help raise funds for our programs and initiatives',
-      location: 'Nairobi and major cities',
-      commitment: 'Flexible',
-      skills: 'Networking, persuasion, event planning'
-    },
-    {
-      title: 'Legal Advocacy',
-      description: 'Support legal aid and policy advocacy efforts',
-      location: 'Nairobi',
-      commitment: '10-15 hours/week',
-      skills: 'Legal knowledge, research, advocacy'
-    },
-    {
-      title: 'Health & Wellness Programs',
-      description: 'Lead health education and wellness workshops',
-      location: 'Community centers',
-      commitment: 'Weekends',
-      skills: 'Health education, public speaking, empathy'
-    }
-  ];
-
   const testimonials = [
     {
       name: 'Amina Hassan',
@@ -126,34 +80,7 @@ const Join = () => {
       location: 'Nakuru',
       role: 'Health Educator',
       story: 'I joined WMWK to help other women access healthcare information. The organization provided me with training and resources to conduct health workshops in rural areas. The impact we\'ve made is incredible.',
-      image: '👩🏾‍⚕️'
-    }
-  ];
-
-  const successStories = [
-    {
-      title: 'Rural Women\'s Economic Empowerment',
-      description: 'We trained 500 women in rural Kenya in financial literacy and entrepreneurship, leading to 80% starting their own businesses.',
-      impact: '500+ women empowered',
-      location: 'Multiple counties'
-    },
-    {
-      title: 'Youth Leadership Program',
-      description: 'Our youth program has trained 200 young women in leadership skills, with 60% now holding leadership positions in their communities.',
-      impact: '200+ youth leaders',
-      location: 'Nairobi, Mombasa, Kisumu'
-    },
-    {
-      title: 'Health Awareness Campaign',
-      description: 'We reached 10,000 women with maternal health education, resulting in a 40% increase in prenatal care attendance.',
-      impact: '10,000+ women reached',
-      location: 'Narok, Kajiado, Samburu'
-    },
-    {
-      title: 'Policy Advocacy Success',
-      description: 'Successfully advocated for gender-responsive budgeting in 3 counties, ensuring women\'s needs are prioritized in local development.',
-      impact: '3 counties impacted',
-      location: 'Nairobi, Nakuru, Eldoret'
+      image: '🏾‍⚕️'
     }
   ];
 
@@ -211,14 +138,21 @@ const Join = () => {
 
     try {
       const joinRequest = {
-        ...formData,
+        first_name: formData.firstName,
+        last_name: formData.lastName,
+        email: formData.email,
+        phone: formData.phone,
+        county: formData.county,
+        involvement_level: formData.involvementLevel,
+        interests: formData.interests,
+        organization: formData.organization,
         status: 'pending',
         created_at: new Date().toISOString()
       };
 
       await addJoinRequest(joinRequest);
-      
       setSubmitStatus('success');
+      setShowSuccessModal(true);
       setFormData({
         firstName: '',
         lastName: '',
@@ -227,8 +161,6 @@ const Join = () => {
         county: '',
         involvementLevel: '',
         interests: [],
-        skills: '',
-        motivation: '',
         organization: ''
       });
     } catch (error) {
@@ -241,6 +173,21 @@ const Join = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Success Modal */}
+      {showSuccessModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full text-center">
+            <h2 className="text-2xl font-bold text-primary mb-4">Application Submitted!</h2>
+            <p className="mb-6 text-text">Thank you for your interest in joining World March of Women Kenya!<br/>We will contact you within 48 hours to discuss next steps.</p>
+            <button
+              className="bg-primary text-white py-2 px-6 rounded-lg font-semibold hover:bg-accent hover:text-primary transition-colors duration-200"
+              onClick={() => setShowSuccessModal(false)}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
       {/* Hero Section */}
       <div className="bg-gradient-to-r from-primary to-accent text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -254,7 +201,7 @@ const Join = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
             <div className="text-center">
               <div className="text-4xl mb-4">🤝</div>
-              <h3 className="text-xl font-semibold mb-2">Community</h3>
+              <h3 className="text-xl font-semibold mb-2">Solidarity</h3>
               <p>Connect with like-minded women and build lasting relationships</p>
             </div>
             <div className="text-center">
@@ -273,13 +220,6 @@ const Join = () => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Success/Error Messages */}
-        {submitStatus === 'success' && (
-          <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-8">
-            <strong>Success!</strong> Thank you for your interest in joining World March of Women Kenya! 
-            We will contact you within 48 hours to discuss next steps.
-          </div>
-        )}
-        
         {submitStatus === 'error' && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-8">
             <strong>Error!</strong> There was a problem submitting your application. Please try again or contact us directly.
@@ -447,45 +387,6 @@ const Join = () => {
               {errors.interests && <p className="text-red-500 text-sm mt-2">{errors.interests}</p>}
             </div>
 
-            {/* Skills and Motivation */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div>
-                <h3 className="text-xl font-semibold text-primary mb-6 border-b border-accent pb-2">
-                  Skills You Can Offer
-                </h3>
-                <label htmlFor="skills" className="block text-sm font-semibold text-primary mb-2">
-                  What skills, experience, or resources can you contribute?
-                </label>
-                <textarea
-                  id="skills"
-                  name="skills"
-                  value={formData.skills}
-                  onChange={handleChange}
-                  rows="6"
-                  className="w-full px-4 py-3 border border-accent rounded-lg focus:outline-none focus:ring-2 focus:ring-primary resize-none"
-                  placeholder="e.g., Event planning, social media management, legal expertise, fundraising, community organizing, translation skills, etc."
-                />
-              </div>
-
-              <div>
-                <h3 className="text-xl font-semibold text-primary mb-6 border-b border-accent pb-2">
-                  Your Motivation
-                </h3>
-                <label htmlFor="motivation" className="block text-sm font-semibold text-primary mb-2">
-                  Why do you want to join WMWK? What change do you hope to make?
-                </label>
-                <textarea
-                  id="motivation"
-                  name="motivation"
-                  value={formData.motivation}
-                  onChange={handleChange}
-                  rows="6"
-                  className="w-full px-4 py-3 border border-accent rounded-lg focus:outline-none focus:ring-2 focus:ring-primary resize-none"
-                  placeholder="Tell us about your passion for women's rights, your background, and what drives you to make a difference..."
-                />
-              </div>
-            </div>
-
             <div className="text-center pt-6">
               <button
                 type="submit"
@@ -496,33 +397,6 @@ const Join = () => {
               </button>
             </div>
           </form>
-        </div>
-
-        {/* Volunteer Opportunities */}
-        <div className="mb-16">
-          <h2 className="text-3xl font-bold text-primary text-center mb-12">Volunteer Opportunities</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {volunteerOpportunities.map((opportunity, index) => (
-              <div key={index} className="bg-white rounded-lg shadow-md p-6 border border-accent">
-                <h3 className="text-xl font-semibold text-primary mb-3">{opportunity.title}</h3>
-                <p className="text-text mb-4">{opportunity.description}</p>
-                <div className="space-y-2 text-sm">
-                  <div className="flex items-center">
-                    <span className="font-semibold text-primary mr-2">📍 Location:</span>
-                    <span>{opportunity.location}</span>
-                  </div>
-                  <div className="flex items-center">
-                    <span className="font-semibold text-primary mr-2">⏰ Commitment:</span>
-                    <span>{opportunity.commitment}</span>
-                  </div>
-                  <div className="flex items-center">
-                    <span className="font-semibold text-primary mr-2">💡 Skills:</span>
-                    <span>{opportunity.skills}</span>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
         </div>
 
         {/* Member Testimonials */}
@@ -540,25 +414,6 @@ const Join = () => {
                   </div>
                 </div>
                 <p className="text-text italic">"{testimonial.story}"</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Success Stories */}
-        <div className="mb-16">
-          <h2 className="text-3xl font-bold text-primary text-center mb-12">Our Impact</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {successStories.map((story, index) => (
-              <div key={index} className="bg-gradient-to-r from-primary to-accent text-white rounded-lg p-6">
-                <h3 className="text-xl font-semibold mb-3">{story.title}</h3>
-                <p className="mb-4 opacity-90">{story.description}</p>
-                <div className="flex justify-between items-center">
-                  <span className="bg-white bg-opacity-20 px-3 py-1 rounded-full text-sm">
-                    {story.impact}
-                  </span>
-                  <span className="text-sm opacity-75">{story.location}</span>
-                </div>
               </div>
             ))}
           </div>

@@ -1,42 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import NewsletterSignup from './NewsletterSignup';
+import { supabase } from '../supabaseClient';
+import { fetchBlogs } from '../supabaseHelpers';
 
-const statsData = [
-  { label: 'Members', value: 12000 },
-  { label: 'Communities Reached', value: 47 },
-  { label: 'Projects Initiated', value: 150 },
-  { label: 'Counties Engaged', value: 47 },
-];
-
-const blogPosts = [
-  {
-    id: 1,
-    title: "The Power of Women's Collective Action in Kenya",
-    excerpt: "How grassroots movements are transforming communities and creating lasting change across the country.",
-    author: "Amina Ochieng",
-    date: "March 15, 2024",
-    category: "Advocacy",
-    readTime: "5 min read"
-  },
-  {
-    id: 2,
-    title: "Economic Empowerment: Stories from Rural Women",
-    excerpt: "Meet the women who are breaking barriers and building sustainable businesses in rural Kenya.",
-    author: "Sarah Muthoni",
-    date: "March 10, 2024",
-    category: "Empowerment",
-    readTime: "7 min read"
-  },
-  {
-    id: 3,
-    title: "Education as a Tool for Gender Equality",
-    excerpt: "Exploring the critical role of education in advancing women's rights and opportunities.",
-    author: "Fatima Hassan",
-    date: "March 5, 2024",
-    category: "Education",
-    readTime: "6 min read"
-  }
+const statOrder = [
+  'Active Members',
+  'Counties Reached',
+  'Women Empowered',
+  'Grassroots Projects',
 ];
 
 const actionAreas = [
@@ -59,31 +31,56 @@ const actionAreas = [
     desc: "Supporting women entrepreneurs, access to finance, and fair employment."
   },
   {
-    title: "Education",
+    title: "Popular Education",
     icon: (
       <svg className="w-10 h-10 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5zm0 0v6m0 0c-4.418 0-8-1.79-8-4V7" />
       </svg>
     ),
-    desc: "Promoting girls' education, literacy, and lifelong learning opportunities."
+    desc: "Collective learning rooted in lived experience, dialogue, and political consciousness helps communities understand oppression and organize for change. "
   },
   {
-    title: "Health",
+    title: "Grassroot Mobilization",
     icon: (
       <svg className="w-10 h-10 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-2.21 0-4 1.79-4 4v1h8v-1c0-2.21-1.79-4-4-4zm0 0V4m0 0C7.582 4 4 7.582 4 12s3.582 8 8 8 8-3.582 8-8-3.582-8-8-8z" />
       </svg>
     ),
-    desc: "Ensuring access to quality healthcare, reproductive rights, and mental wellness."
+    desc: "building power from the ground up by organizing with communities most affected by injustice, and centering their voices in the struggle for social transformation."
   }
 ];
 
 const Home = () => {
   // Animated Counters
-  const [counts, setCounts] = useState(statsData.map(() => 0));
+  const [stats, setStats] = useState([
+    { label: 'Active Members', value: 0 },
+    { label: 'Counties Reached', value: 0 },
+    { label: 'Women Empowered', value: 0 },
+    { label: 'Grassroots Projects', value: 0 },
+  ]);
+  const [counts, setCounts] = useState([0, 0, 0, 0]);
+
+  // Blog state
+  const [blogPosts, setBlogPosts] = useState([]);
+  const [blogLoading, setBlogLoading] = useState(true);
+  const [blogError, setBlogError] = useState(null);
 
   useEffect(() => {
-    const intervals = statsData.map((stat, idx) => {
+    async function fetchStats() {
+      const { data, error } = await supabase
+        .from('site_stats')
+        .select('*');
+      if (!error && data) {
+        const sorted = statOrder.map(label => data.find(s => s.label === label) || { label, value: 0 });
+        setStats(sorted);
+      }
+    }
+    fetchStats();
+  }, []);
+
+  useEffect(() => {
+    // Animate counters when stats change
+    const intervals = stats.map((stat, idx) => {
       return setInterval(() => {
         setCounts(prev => {
           const next = [...prev];
@@ -95,9 +92,21 @@ const Home = () => {
       }, 20);
     });
     return () => intervals.forEach(clearInterval);
+  }, [stats]);
+
+  // Fetch blog posts
+  useEffect(() => {
+    setBlogLoading(true);
+    fetchBlogs()
+      .then(data => {
+        setBlogPosts(Array.isArray(data) ? data.slice(0, 3) : []);
+        setBlogLoading(false);
+      })
+      .catch(error => {
+        setBlogError('Failed to load blog posts.');
+        setBlogLoading(false);
+      });
   }, []);
-
-
 
   return (
     <div className="min-h-screen bg-background">
@@ -133,7 +142,7 @@ const Home = () => {
       {/* Statistics Counters */}
       <section className="py-12 bg-background">
         <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-          {statsData.map((stat, idx) => (
+          {stats.map((stat, idx) => (
             <div key={stat.label} className="p-6 rounded-lg shadow bg-white hover:shadow-xl transition-shadow duration-300 animate-fade-in-up">
               <div className="text-4xl md:text-5xl font-extrabold text-primary mb-2">{counts[idx].toLocaleString()}</div>
               <div className="text-lg font-semibold text-accent">{stat.label}</div>
@@ -167,41 +176,69 @@ const Home = () => {
       <section className="py-16 bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl md:text-4xl font-bold text-primary text-center mb-12 animate-fade-in">Latest from Our Blog</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {blogPosts.map((post) => (
-              <article key={post.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-200 animate-fade-in-up">
-                <div className="h-40 bg-accent flex items-center justify-center">
-                  <div className="text-center">
-                    <div className="text-4xl text-primary mb-2">📝</div>
-                    <p className="text-primary font-semibold">{post.category}</p>
-                  </div>
-                </div>
-                <div className="p-6">
-                  <div className="flex items-center mb-3">
-                    <span className="bg-primary text-white px-2 py-1 rounded text-xs font-semibold">
-                      {post.category}
-                    </span>
-                    <span className="text-accent text-sm ml-3">{post.readTime}</span>
-                  </div>
-                  <h3 className="text-lg font-bold text-primary mb-2 line-clamp-2">
-                    {post.title}
-                  </h3>
-                  <p className="text-text mb-4 line-clamp-3">
-                    {post.excerpt}
-                  </p>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-accent font-semibold text-sm">{post.author}</p>
-                      <p className="text-text text-xs">{post.date}</p>
+          {blogLoading ? (
+            <div className="text-center text-accent py-12">Loading blog posts...</div>
+          ) : blogError ? (
+            <div className="text-center text-red-500 py-12">{blogError}</div>
+          ) : blogPosts.length === 0 ? (
+            <div className="text-center text-accent py-12">No blog posts found.</div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {blogPosts.map((post) => {
+                // Find the first available image field
+                const possibleFields = ['image', 'image_url', 'imageUrl', 'cover_image', 'thumbnail', 'featured_image'];
+                let imageUrl = null;
+                for (const field of possibleFields) {
+                  if (post[field] && typeof post[field] === 'string' && post[field].trim()) {
+                    imageUrl = post[field].trim();
+                    break;
+                  }
+                }
+                return (
+                  <article key={post.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-200 animate-fade-in-up">
+                    {imageUrl ? (
+                      <img
+                        src={imageUrl}
+                        alt={typeof post.title === 'string' ? post.title : 'Blog post'}
+                        className="h-40 w-full object-cover bg-accent"
+                        onError={e => { e.target.style.display = 'none'; }}
+                      />
+                    ) : (
+                      <div className="h-40 bg-accent flex items-center justify-center">
+                        <div className="text-center">
+                          <div className="text-4xl text-primary mb-2">📝</div>
+                          <p className="text-primary font-semibold">{post.category}</p>
+                        </div>
+                      </div>
+                    )}
+                    <div className="p-6">
+                      <div className="flex items-center mb-3">
+                        <span className="bg-primary text-white px-2 py-1 rounded text-xs font-semibold">
+                          {post.category}
+                        </span>
+                        <span className="text-accent text-sm ml-3">{post.readTime || post.date}</span>
+                      </div>
+                      <h3 className="text-lg font-bold text-primary mb-2 line-clamp-2">
+                        {post.title}
+                      </h3>
+                      <p className="text-text mb-4 line-clamp-3">
+                        {post.excerpt || (typeof post.content === 'string' ? post.content.split(' ').slice(0, 30).join(' ') + '...' : '')}
+                      </p>
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-accent font-semibold text-sm">{post.author}</p>
+                          <p className="text-text text-xs">{post.date}</p>
+                        </div>
+                        <Link to="/blogs" className="text-primary hover:text-accent font-semibold text-sm transition-colors duration-200">
+                          Read More →
+                        </Link>
+                      </div>
                     </div>
-                    <Link to="/blogs" className="text-primary hover:text-accent font-semibold text-sm transition-colors duration-200">
-                      Read More →
-                    </Link>
-                  </div>
-                </div>
-              </article>
-            ))}
-          </div>
+                  </article>
+                );
+              })}
+            </div>
+          )}
         </div>
       </section>
 

@@ -1,26 +1,24 @@
 import { supabase } from './supabaseClient';
 
 // Subscribe to newsletter
-export const subscribeToNewsletter = async (email, firstName = null, lastName = null) => {
+export const subscribeToNewsletter = async (email) => {
   try {
     // Check if email already exists
     const { data: existingSubscriber } = await supabase
       .from('newsletter_subscribers')
-      .select('id, is_active')
+      .select('id, active')
       .eq('email', email)
       .single();
 
     if (existingSubscriber) {
-      if (existingSubscriber.is_active) {
+      if (existingSubscriber.active) {
         return { success: false, message: 'This email is already subscribed to our newsletter.' };
       } else {
         // Reactivate subscription
         const { error: updateError } = await supabase
           .from('newsletter_subscribers')
           .update({ 
-            is_active: true, 
-            unsubscribed_at: null,
-            updated_at: new Date().toISOString()
+            active: true
           })
           .eq('email', email);
 
@@ -33,9 +31,7 @@ export const subscribeToNewsletter = async (email, firstName = null, lastName = 
         .from('newsletter_subscribers')
         .insert({
           email,
-          first_name: firstName,
-          last_name: lastName,
-          source: 'website'
+          active: true
         });
 
       if (insertError) throw insertError;
@@ -43,6 +39,7 @@ export const subscribeToNewsletter = async (email, firstName = null, lastName = 
     }
   } catch (error) {
     console.error('Newsletter subscription error:', error);
+    alert(JSON.stringify(error));
     return { success: false, message: 'Something went wrong. Please try again later.' };
   }
 };
@@ -50,19 +47,19 @@ export const subscribeToNewsletter = async (email, firstName = null, lastName = 
 // Unsubscribe from newsletter
 export const unsubscribeFromNewsletter = async (email) => {
   try {
+    const trimmedEmail = email.trim();
     const { error } = await supabase
       .from('newsletter_subscribers')
       .update({ 
-        is_active: false, 
-        unsubscribed_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
+        active: false,
+        unsubscribed_at: new Date().toISOString()
       })
-      .eq('email', email);
-
+      .ilike('email', trimmedEmail);
     if (error) throw error;
     return { success: true, message: 'You have been successfully unsubscribed from our newsletter.' };
   } catch (error) {
     console.error('Unsubscribe error:', error);
+    alert(JSON.stringify(error));
     return { success: false, message: 'Something went wrong. Please try again.' };
   }
 };
@@ -73,7 +70,7 @@ export const resubscribeToNewsletter = async (email) => {
     const { error } = await supabase
       .from('newsletter_subscribers')
       .update({ 
-        is_active: true, 
+        active: true, 
         unsubscribed_at: null,
         updated_at: new Date().toISOString()
       })
@@ -119,9 +116,9 @@ export const getAllSubscribers = async (filters = {}) => {
       .order(filters.sortBy || 'subscribed_at', { ascending: filters.sortOrder === 'asc' });
 
     if (filters.status === 'active') {
-      query = query.eq('is_active', true);
+      query = query.eq('active', true);
     } else if (filters.status === 'inactive') {
-      query = query.eq('is_active', false);
+      query = query.eq('active', false);
     }
 
     if (filters.search) {
@@ -175,12 +172,12 @@ export const getSubscriberStats = async () => {
   try {
     const { data, error } = await supabase
       .from('newsletter_subscribers')
-      .select('is_active, subscribed_at');
+      .select('active, subscribed_at');
 
     if (error) throw error;
 
     const total = data.length;
-    const active = data.filter(sub => sub.is_active).length;
+    const active = data.filter(sub => sub.active).length;
     const inactive = total - active;
 
     // Get recent subscriptions (last 30 days)
