@@ -6,19 +6,19 @@ export const subscribeToNewsletter = async (email) => {
     // Check if email already exists
     const { data: existingSubscriber } = await supabase
       .from('newsletter_subscribers')
-      .select('id, active')
+      .select('id, is_active')
       .eq('email', email)
       .single();
 
     if (existingSubscriber) {
-      if (existingSubscriber.active) {
+      if (existingSubscriber.is_active) {
         return { success: false, message: 'This email is already subscribed to our newsletter.' };
       } else {
         // Reactivate subscription
         const { error: updateError } = await supabase
           .from('newsletter_subscribers')
           .update({ 
-            active: true
+            is_active: true
           })
           .eq('email', email);
 
@@ -31,7 +31,7 @@ export const subscribeToNewsletter = async (email) => {
         .from('newsletter_subscribers')
         .insert({
           email,
-          active: true
+          is_active: true
         });
 
       if (insertError) throw insertError;
@@ -51,7 +51,7 @@ export const unsubscribeFromNewsletter = async (email) => {
     const { error } = await supabase
       .from('newsletter_subscribers')
       .update({ 
-        active: false,
+        is_active: false,
         unsubscribed_at: new Date().toISOString()
       })
       .ilike('email', trimmedEmail);
@@ -70,7 +70,7 @@ export const resubscribeToNewsletter = async (email) => {
     const { error } = await supabase
       .from('newsletter_subscribers')
       .update({ 
-        active: true, 
+        is_active: true, 
         unsubscribed_at: null,
         updated_at: new Date().toISOString()
       })
@@ -116,9 +116,9 @@ export const getAllSubscribers = async (filters = {}) => {
       .order(filters.sortBy || 'subscribed_at', { ascending: filters.sortOrder === 'asc' });
 
     if (filters.status === 'active') {
-      query = query.eq('active', true);
+      query = query.eq('is_active', true);
     } else if (filters.status === 'inactive') {
-      query = query.eq('active', false);
+      query = query.eq('is_active', false);
     }
 
     if (filters.search) {
@@ -172,12 +172,12 @@ export const getSubscriberStats = async () => {
   try {
     const { data, error } = await supabase
       .from('newsletter_subscribers')
-      .select('active, subscribed_at');
+      .select('is_active, subscribed_at');
 
     if (error) throw error;
 
     const total = data.length;
-    const active = data.filter(sub => sub.active).length;
+    const active = data.filter(sub => sub.is_active).length;
     const inactive = total - active;
 
     // Get recent subscriptions (last 30 days)

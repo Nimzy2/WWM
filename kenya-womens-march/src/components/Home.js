@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import NewsletterSignup from './NewsletterSignup';
+import SEOHead from './SEOHead';
 import { supabase } from '../supabaseClient';
 import { fetchBlogs } from '../supabaseHelpers';
 
@@ -110,27 +111,33 @@ const Home = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead 
+        title="Home"
+        description="Join the movement for equality, justice, and opportunity for every woman in Kenya. World March of Women Kenya empowers women through advocacy, education, and grassroots mobilization."
+        keywords="women's rights Kenya, gender equality, women empowerment, social justice, grassroots mobilization, feminist movement, women's advocacy, community development"
+      />
+      
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-primary/90 to-accent text-white py-20 relative overflow-hidden">
+      <section className="bg-gradient-to-r from-primary/90 to-accent text-white py-12 md:py-20 relative overflow-hidden">
         <div className="absolute inset-0 opacity-10 bg-[url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80')] bg-cover bg-center" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
           <div className="text-center">
-            <h1 className="text-4xl md:text-6xl font-extrabold text-white drop-shadow mb-6 animate-fade-in">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-white drop-shadow mb-4 md:mb-6 animate-fade-in">
               Empowering Kenyan Women, Transforming Communities
             </h1>
-            <p className="text-xl md:text-2xl text-accent mb-8 mx-auto animate-fade-in delay-200">
+            <p className="text-lg sm:text-xl md:text-2xl text-accent mb-6 md:mb-8 mx-auto max-w-4xl animate-fade-in delay-200">
               Join the movement for equality, justice, and opportunity for every woman in Kenya.
             </p>
-            <div className="space-x-4 animate-fade-in delay-400">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in delay-400">
               <Link
                 to="/join"
-                className="bg-white text-primary px-8 py-3 rounded-lg font-semibold shadow hover:bg-accent hover:text-white transition-colors duration-200"
+                className="bg-white text-primary px-6 md:px-8 py-3 rounded-lg font-semibold shadow hover:bg-accent hover:text-white transition-colors duration-200 text-center"
               >
                 Join Our Movement
               </Link>
               <Link
                 to="/about"
-                className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-primary transition-colors duration-200"
+                className="border-2 border-white text-white px-6 md:px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-primary transition-colors duration-200 text-center"
               >
                 Learn More
               </Link>
@@ -140,32 +147,34 @@ const Home = () => {
       </section>
 
       {/* Statistics Counters */}
-      <section className="py-12 bg-background">
-        <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+      <section className="py-8 md:py-12 bg-background">
+        <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 text-center px-4 sm:px-6 lg:px-8">
           {stats.map((stat, idx) => (
-            <div key={stat.label} className="p-6 rounded-lg shadow bg-white hover:shadow-xl transition-shadow duration-300 animate-fade-in-up">
-              <div className="text-4xl md:text-5xl font-extrabold text-primary mb-2">{counts[idx].toLocaleString()}</div>
-              <div className="text-lg font-semibold text-accent">{stat.label}</div>
+            <div key={stat.label} className="p-4 md:p-6 rounded-lg shadow bg-white hover:shadow-xl transition-shadow duration-300 animate-fade-in-up">
+              <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-primary mb-2">{counts[idx].toLocaleString()}</div>
+              <div className="text-sm sm:text-base md:text-lg font-semibold text-accent">{stat.label}</div>
             </div>
           ))}
         </div>
       </section>
 
       {/* Action Areas Grid */}
-      <section className="py-16 bg-accent/20">
+      <section className="py-12 md:py-16 bg-accent/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl md:text-4xl font-bold text-primary text-center mb-12 animate-fade-in">Our Focus Areas</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-primary text-center mb-8 md:mb-12 animate-fade-in">Our Focus Areas</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
             {actionAreas.map((area, idx) => (
               <div
                 key={area.title}
-                className="bg-white rounded-xl p-8 text-center shadow hover:scale-105 hover:bg-primary/10 transition-all duration-300 group animate-fade-in-up"
+                className="bg-white rounded-xl p-6 md:p-8 text-center shadow hover:scale-105 hover:bg-primary/10 transition-all duration-300 group animate-fade-in-up"
               >
                 <div className="flex items-center justify-center mb-4">
-                  {area.icon}
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 text-primary">
+                    {area.icon}
+                  </div>
                 </div>
-                <h3 className="text-xl font-bold text-primary mb-2 group-hover:text-accent transition-colors duration-200">{area.title}</h3>
-                <p className="text-text group-hover:text-primary transition-colors duration-200">{area.desc}</p>
+                <h3 className="text-lg sm:text-xl font-bold text-primary mb-2 group-hover:text-accent transition-colors duration-200">{area.title}</h3>
+                <p className="text-sm sm:text-base text-text group-hover:text-primary transition-colors duration-200 leading-relaxed">{area.desc}</p>
               </div>
             ))}
           </div>
@@ -173,17 +182,17 @@ const Home = () => {
       </section>
 
       {/* Featured Blog Posts */}
-      <section className="py-16 bg-background">
+      <section className="py-12 md:py-16 bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl md:text-4xl font-bold text-primary text-center mb-12 animate-fade-in">Latest from Our Blog</h2>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-primary text-center mb-8 md:mb-12 animate-fade-in">Latest from Our Blog</h2>
           {blogLoading ? (
-            <div className="text-center text-accent py-12">Loading blog posts...</div>
+            <div className="text-center text-accent py-8 md:py-12">Loading blog posts...</div>
           ) : blogError ? (
-            <div className="text-center text-red-500 py-12">{blogError}</div>
+            <div className="text-center text-red-500 py-8 md:py-12">{blogError}</div>
           ) : blogPosts.length === 0 ? (
-            <div className="text-center text-accent py-12">No blog posts found.</div>
+            <div className="text-center text-accent py-8 md:py-12">No blog posts found.</div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
               {blogPosts.map((post) => {
                 // Find the first available image field
                 const possibleFields = ['image', 'image_url', 'imageUrl', 'cover_image', 'thumbnail', 'featured_image'];
@@ -199,37 +208,32 @@ const Home = () => {
                     {imageUrl ? (
                       <img
                         src={imageUrl}
-                        alt={typeof post.title === 'string' ? post.title : 'Blog post'}
-                        className="h-40 w-full object-cover bg-accent"
-                        onError={e => { e.target.style.display = 'none'; }}
+                        alt={post.title || 'Blog post'}
+                        className="w-full h-48 md:h-56 object-cover"
                       />
                     ) : (
-                      <div className="h-40 bg-accent flex items-center justify-center">
-                        <div className="text-center">
-                          <div className="text-4xl text-primary mb-2">📝</div>
-                          <p className="text-primary font-semibold">{post.category}</p>
-                        </div>
+                      <div className="w-full h-48 md:h-56 bg-gradient-to-br from-purple-100 to-pink-100 flex items-center justify-center">
+                        <div className="text-4xl text-primary">📖</div>
                       </div>
                     )}
-                    <div className="p-6">
-                      <div className="flex items-center mb-3">
-                        <span className="bg-primary text-white px-2 py-1 rounded text-xs font-semibold">
-                          {post.category}
+                    <div className="p-4 md:p-6">
+                      <div className="flex items-center mb-2">
+                        <span className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-2 py-1 rounded text-xs font-semibold">
+                          {post.category || 'General'}
                         </span>
-                        <span className="text-accent text-sm ml-3">{post.readTime || post.date}</span>
+                        <span className="text-accent text-xs ml-3">{post.date || ''}</span>
                       </div>
-                      <h3 className="text-lg font-bold text-primary mb-2 line-clamp-2">
-                        {post.title}
+                      <h3 className="text-lg md:text-xl font-bold text-primary mb-2 line-clamp-2">
+                        <Link to={`/blog/${post.id}`}>{post.title}</Link>
                       </h3>
-                      <p className="text-text mb-4 line-clamp-3">
-                        {post.excerpt || (typeof post.content === 'string' ? post.content.split(' ').slice(0, 30).join(' ') + '...' : '')}
+                      <p className="text-text mb-4 line-clamp-3 text-sm md:text-base">
+                        {post.excerpt || (post.content ? post.content.split(' ').slice(0, 30).join(' ') + '...' : '')}
                       </p>
                       <div className="flex items-center justify-between">
                         <div>
-                          <p className="text-accent font-semibold text-sm">{post.author}</p>
-                          <p className="text-text text-xs">{post.date}</p>
+                          <p className="text-accent font-semibold text-xs md:text-sm">{post.author || 'WMW Kenya'}</p>
                         </div>
-                        <Link to="/blogs" className="text-primary hover:text-accent font-semibold text-sm transition-colors duration-200">
+                        <Link to={`/blog/${post.id}`} className="text-primary hover:text-accent font-semibold text-xs md:text-sm transition-colors duration-200">
                           Read More →
                         </Link>
                       </div>
@@ -243,12 +247,11 @@ const Home = () => {
       </section>
 
       {/* Newsletter Signup */}
-      <section className="py-16 bg-primary">
-        <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <section className="py-12 md:py-16 bg-primary">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <NewsletterSignup 
-            variant="default"
-            title="Stay Updated"
-            subtitle="Subscribe to our newsletter for the latest updates, stories, and opportunities."
+            title="Stay Connected"
+            subtitle="Subscribe to our newsletter for updates, stories of empowerment, and opportunities to get involved."
           />
         </div>
       </section>

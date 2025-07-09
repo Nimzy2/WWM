@@ -38,7 +38,7 @@ export async function fetchSubscribers() {
 }
 
 export async function addSubscriber(email) {
-  const { data, error } = await supabase.from('newsletter_subscribers').insert([{ email, active: true }]).single();
+  const { data, error } = await supabase.from('newsletter_subscribers').insert([{ email, is_active: true }]).single();
   if (error) throw error;
   return data;
 }

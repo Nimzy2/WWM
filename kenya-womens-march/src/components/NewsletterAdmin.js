@@ -120,27 +120,27 @@ const NewsletterAdmin = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background py-8">
+    <div className="min-h-screen bg-background py-6 md:py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-white rounded-lg shadow-lg p-6">
+        <div className="bg-white rounded-lg shadow-lg p-4 md:p-6">
           {/* Header */}
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 md:mb-6">
             <div>
-              <h1 className="text-3xl font-bold text-primary mb-2">Newsletter Subscribers</h1>
-              <p className="text-text">
+              <h1 className="text-2xl md:text-3xl font-bold text-primary mb-2">Newsletter Subscribers</h1>
+              <p className="text-sm md:text-base text-text">
                 Manage your newsletter subscribers and export data
               </p>
             </div>
             <div className="flex flex-col sm:flex-row gap-2 mt-4 sm:mt-0">
               <button
                 onClick={exportSubscribers}
-                className="bg-green-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-green-700 transition-colors duration-200"
+                className="bg-green-600 text-white px-3 md:px-4 py-2 rounded-lg font-semibold hover:bg-green-700 transition-colors duration-200 text-sm md:text-base"
               >
                 Export CSV
               </button>
               <button
                 onClick={fetchSubscribers}
-                className="bg-primary text-white px-4 py-2 rounded-lg font-semibold hover:bg-accent transition-colors duration-200"
+                className="bg-primary text-white px-3 md:px-4 py-2 rounded-lg font-semibold hover:bg-accent transition-colors duration-200 text-sm md:text-base"
               >
                 Refresh
               </button>
@@ -149,7 +149,7 @@ const NewsletterAdmin = () => {
 
           {/* Message Display */}
           {message.text && (
-            <div className={`mb-6 p-4 rounded-lg border ${
+            <div className={`mb-4 md:mb-6 p-3 md:p-4 rounded-lg border text-sm md:text-base ${
               message.type === 'success' 
                 ? 'bg-green-50 border-green-200 text-green-800' 
                 : 'bg-red-50 border-red-200 text-red-800'
@@ -159,18 +159,18 @@ const NewsletterAdmin = () => {
           )}
 
           {/* Filters and Search */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-4 md:mb-6">
             <input
               type="text"
               placeholder="Search by email or name..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+              className="px-3 md:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-sm md:text-base"
             />
             <select
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+              className="px-3 md:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-sm md:text-base"
             >
               <option value="all">All Subscribers</option>
               <option value="active">Active Only</option>
@@ -179,7 +179,7 @@ const NewsletterAdmin = () => {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+              className="px-3 md:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-sm md:text-base"
             >
               <option value="subscribed_at">Subscribed Date</option>
               <option value="email">Email</option>
@@ -188,7 +188,7 @@ const NewsletterAdmin = () => {
             </select>
             <button
               onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-              className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-200"
+              className="px-3 md:px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-200 text-sm md:text-base"
             >
               {sortOrder === 'asc' ? '↑ Ascending' : '↓ Descending'}
             </button>
@@ -196,27 +196,27 @@ const NewsletterAdmin = () => {
 
           {/* Bulk Actions */}
           {selectedSubscribers.length > 0 && (
-            <div className="mb-4 p-4 bg-blue-50 rounded-lg">
-              <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-                <span className="text-blue-800 font-semibold">
+            <div className="mb-4 p-3 md:p-4 bg-blue-50 rounded-lg">
+              <div className="flex flex-col sm:flex-row justify-between items-center gap-3 md:gap-4">
+                <span className="text-sm md:text-base font-medium text-blue-800">
                   {selectedSubscribers.length} subscriber(s) selected
                 </span>
-                <div className="flex gap-2">
+                <div className="flex flex-wrap gap-2">
                   <button
                     onClick={() => handleBulkAction('activate')}
-                    className="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700 transition-colors duration-200"
+                    className="bg-green-600 text-white px-3 py-2 rounded-lg font-semibold hover:bg-green-700 transition-colors duration-200 text-xs md:text-sm"
                   >
                     Activate
                   </button>
                   <button
                     onClick={() => handleBulkAction('deactivate')}
-                    className="bg-yellow-600 text-white px-3 py-1 rounded text-sm hover:bg-yellow-700 transition-colors duration-200"
+                    className="bg-yellow-600 text-white px-3 py-2 rounded-lg font-semibold hover:bg-yellow-700 transition-colors duration-200 text-xs md:text-sm"
                   >
                     Deactivate
                   </button>
                   <button
                     onClick={() => handleBulkAction('delete')}
-                    className="bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700 transition-colors duration-200"
+                    className="bg-red-600 text-white px-3 py-2 rounded-lg font-semibold hover:bg-red-700 transition-colors duration-200 text-xs md:text-sm"
                   >
                     Delete
                   </button>
@@ -226,86 +226,88 @@ const NewsletterAdmin = () => {
           )}
 
           {/* Subscribers Table */}
-          <div className="overflow-x-auto">
-            <table className="w-full border-collapse border border-gray-200">
-              <thead>
-                <tr className="bg-gray-50">
-                  <th className="border border-gray-200 px-4 py-2 text-left">
-                    <input
-                      type="checkbox"
-                      checked={selectedSubscribers.length === filteredSubscribers.length && filteredSubscribers.length > 0}
-                      onChange={(e) => handleSelectAll(e.target.checked)}
-                      className="rounded"
-                    />
-                  </th>
-                  <th className="border border-gray-200 px-4 py-2 text-left font-semibold">Email</th>
-                  <th className="border border-gray-200 px-4 py-2 text-left font-semibold">Name</th>
-                  <th className="border border-gray-200 px-4 py-2 text-left font-semibold">Status</th>
-                  <th className="border border-gray-200 px-4 py-2 text-left font-semibold">Subscribed</th>
-                  <th className="border border-gray-200 px-4 py-2 text-left font-semibold">Source</th>
-                </tr>
-              </thead>
-              <tbody>
-                {loading ? (
+          {loading ? (
+            <div className="text-center text-accent py-8 md:py-12">
+              <div className="text-lg md:text-xl">Loading subscribers...</div>
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
                   <tr>
-                    <td colSpan="6" className="border border-gray-200 px-4 py-8 text-center text-gray-500">
-                      Loading subscribers...
-                    </td>
+                    <th className="px-3 md:px-6 py-3 text-left text-xs md:text-sm font-medium text-gray-500 uppercase tracking-wider">
+                      <input
+                        type="checkbox"
+                        checked={selectedSubscribers.length === filteredSubscribers.length && filteredSubscribers.length > 0}
+                        onChange={(e) => handleSelectAll(e.target.checked)}
+                        className="rounded border-gray-300 text-primary focus:ring-primary"
+                      />
+                    </th>
+                    <th className="px-3 md:px-6 py-3 text-left text-xs md:text-sm font-medium text-gray-500 uppercase tracking-wider">
+                      Email
+                    </th>
+                    <th className="px-3 md:px-6 py-3 text-left text-xs md:text-sm font-medium text-gray-500 uppercase tracking-wider">
+                      Name
+                    </th>
+                    <th className="px-3 md:px-6 py-3 text-left text-xs md:text-sm font-medium text-gray-500 uppercase tracking-wider">
+                      Status
+                    </th>
+                    <th className="px-3 md:px-6 py-3 text-left text-xs md:text-sm font-medium text-gray-500 uppercase tracking-wider">
+                      Subscribed
+                    </th>
+                    <th className="px-3 md:px-6 py-3 text-left text-xs md:text-sm font-medium text-gray-500 uppercase tracking-wider">
+                      Source
+                    </th>
                   </tr>
-                ) : filteredSubscribers.length === 0 ? (
-                  <tr>
-                    <td colSpan="6" className="border border-gray-200 px-4 py-8 text-center text-gray-500">
-                      No subscribers found
-                    </td>
-                  </tr>
-                ) : (
-                  filteredSubscribers.map((subscriber) => (
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {filteredSubscribers.map((subscriber) => (
                     <tr key={subscriber.id} className="hover:bg-gray-50">
-                      <td className="border border-gray-200 px-4 py-2">
+                      <td className="px-3 md:px-6 py-4 whitespace-nowrap">
                         <input
                           type="checkbox"
                           checked={selectedSubscribers.includes(subscriber.id)}
                           onChange={(e) => handleSelectSubscriber(subscriber.id, e.target.checked)}
-                          className="rounded"
+                          className="rounded border-gray-300 text-primary focus:ring-primary"
                         />
                       </td>
-                      <td className="border border-gray-200 px-4 py-2 font-medium">
+                      <td className="px-3 md:px-6 py-4 whitespace-nowrap text-sm md:text-base text-gray-900">
                         {subscriber.email}
                       </td>
-                      <td className="border border-gray-200 px-4 py-2">
+                      <td className="px-3 md:px-6 py-4 whitespace-nowrap text-sm md:text-base text-gray-900">
                         {subscriber.first_name && subscriber.last_name 
                           ? `${subscriber.first_name} ${subscriber.last_name}`
                           : subscriber.first_name || subscriber.last_name || '-'
                         }
                       </td>
-                      <td className="border border-gray-200 px-4 py-2">
-                        <span className={`px-2 py-1 rounded text-xs font-semibold ${
-                          subscriber.is_active 
-                            ? 'bg-green-100 text-green-800' 
+                      <td className="px-3 md:px-6 py-4 whitespace-nowrap">
+                        <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                          subscriber.is_active
+                            ? 'bg-green-100 text-green-800'
                             : 'bg-red-100 text-red-800'
                         }`}>
                           {subscriber.is_active ? 'Active' : 'Inactive'}
                         </span>
                       </td>
-                      <td className="border border-gray-200 px-4 py-2 text-sm">
+                      <td className="px-3 md:px-6 py-4 whitespace-nowrap text-sm md:text-base text-gray-900">
                         {formatDate(subscriber.subscribed_at)}
                       </td>
-                      <td className="border border-gray-200 px-4 py-2 text-sm">
+                      <td className="px-3 md:px-6 py-4 whitespace-nowrap text-sm md:text-base text-gray-900">
                         {subscriber.source || 'website'}
                       </td>
                     </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
 
-          {/* Summary */}
-          <div className="mt-6 text-sm text-text">
-            <p>Total subscribers: {filteredSubscribers.length}</p>
-            <p>Active subscribers: {filteredSubscribers.filter(s => s.is_active).length}</p>
-            <p>Inactive subscribers: {filteredSubscribers.filter(s => !s.is_active).length}</p>
-          </div>
+          {/* No Results */}
+          {!loading && filteredSubscribers.length === 0 && (
+            <div className="text-center text-accent py-8 md:py-12">
+              <div className="text-lg md:text-xl">No subscribers found.</div>
+            </div>
+          )}
         </div>
       </div>
     </div>

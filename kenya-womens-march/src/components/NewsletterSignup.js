@@ -60,27 +60,27 @@ const NewsletterSignup = ({
     switch (variant) {
       case 'compact':
         return {
-          container: "bg-white rounded-lg shadow-md p-6",
-          title: "text-lg font-bold text-primary mb-2",
-          subtitle: "text-sm text-text mb-4",
-          input: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent",
-          button: "w-full bg-primary text-white px-4 py-2 rounded-md font-semibold hover:bg-accent transition-colors duration-200"
+          container: "bg-white rounded-lg shadow-md p-4 md:p-6",
+          title: "text-base md:text-lg font-bold text-primary mb-2",
+          subtitle: "text-xs md:text-sm text-text mb-3 md:mb-4",
+          input: "w-full px-3 py-2 md:py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm md:text-base",
+          button: "w-full bg-primary text-white px-4 py-2 md:py-3 rounded-md font-semibold hover:bg-accent transition-colors duration-200 text-sm md:text-base"
         };
       case 'footer':
         return {
-          container: "bg-primary/10 rounded-lg p-4",
-          title: "text-lg font-bold text-primary mb-2",
-          subtitle: "text-sm text-text mb-4",
-          input: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent",
-          button: "w-full bg-primary text-white px-4 py-2 rounded-md font-semibold hover:bg-accent transition-colors duration-200"
+          container: "bg-primary/10 rounded-lg p-3 md:p-4",
+          title: "text-base md:text-lg font-bold text-primary mb-2",
+          subtitle: "text-xs md:text-sm text-text mb-3 md:mb-4",
+          input: "w-full px-3 py-2 md:py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm md:text-base",
+          button: "w-full bg-primary text-white px-4 py-2 md:py-3 rounded-md font-semibold hover:bg-accent transition-colors duration-200 text-sm md:text-base"
         };
       default:
         return {
-          container: "bg-primary text-white py-12 px-6 rounded-lg",
-          title: "text-2xl md:text-3xl font-bold mb-4 text-white",
-          subtitle: "text-accent mb-6",
-          input: "flex-1 px-4 py-3 rounded-lg text-primary focus:outline-none focus:ring-2 focus:ring-accent",
-          button: "bg-white text-primary px-6 py-3 rounded-lg font-semibold hover:bg-accent hover:text-white transition-colors duration-200"
+          container: "bg-primary text-white py-8 md:py-12 px-4 md:px-6 rounded-lg",
+          title: "text-xl md:text-2xl lg:text-3xl font-bold mb-3 md:mb-4 text-white",
+          subtitle: "text-sm md:text-base text-accent mb-4 md:mb-6",
+          input: "flex-1 px-3 md:px-4 py-2 md:py-3 rounded-lg text-primary focus:outline-none focus:ring-2 focus:ring-accent text-sm md:text-base",
+          button: "bg-white text-primary px-4 md:px-6 py-2 md:py-3 rounded-lg font-semibold hover:bg-accent hover:text-white transition-colors duration-200 text-sm md:text-base"
         };
     }
   };
@@ -92,9 +92,9 @@ const NewsletterSignup = ({
       <h2 className={styles.title}>{title}</h2>
       <p className={styles.subtitle}>{subtitle}</p>
       
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-3 md:space-y-4">
         {showNameFields && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
             <input
               type="text"
               name="first_name"
@@ -114,7 +114,7 @@ const NewsletterSignup = ({
           </div>
         )}
         
-        <div className={variant === 'default' ? "flex flex-col sm:flex-row gap-4" : "space-y-4"}>
+        <div className={variant === 'default' ? "flex flex-col sm:flex-row gap-3 md:gap-4" : "space-y-3 md:space-y-4"}>
           <input
             type="email"
             name="email"
@@ -134,7 +134,7 @@ const NewsletterSignup = ({
         </div>
         
         {message.text && (
-          <div className={`mt-3 p-3 rounded-md text-sm ${
+          <div className={`mt-3 p-3 rounded-md text-xs md:text-sm ${
             message.type === 'success' 
               ? 'bg-green-100 text-green-800 border border-green-200' 
               : 'bg-red-100 text-red-800 border border-red-200'
