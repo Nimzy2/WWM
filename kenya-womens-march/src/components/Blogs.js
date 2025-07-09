@@ -222,6 +222,28 @@ const Blogs = () => {
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+          {/* Search and Filter Controls - Top Right */}
+          <div className="flex justify-end mb-6">
+            <div className="flex flex-col sm:flex-row gap-3">
+              <input
+                type="text"
+                placeholder="Search posts..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="px-4 py-2 border border-accent rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-primary bg-background/80 min-w-[200px]"
+              />
+              <select
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory(e.target.value)}
+                className="px-4 py-2 border border-accent rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-primary bg-background/80"
+              >
+                {categories.map(category => (
+                  <option key={category} value={category}>{category}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+
           {/* Featured Post */}
           {featured && (
             <div className="mb-12 md:mb-16">
@@ -267,28 +289,6 @@ const Blogs = () => {
               </div>
             </div>
           )}
-
-          {/* Filters and Search */}
-          <div className="mb-8 md:mb-12">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-              <input
-                type="text"
-                placeholder="Search posts..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="px-4 py-2 border border-accent rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-primary bg-background/80"
-              />
-              <select
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-                className="px-4 py-2 border border-accent rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-primary bg-background/80"
-              >
-                {categories.map(category => (
-                  <option key={category} value={category}>{category}</option>
-                ))}
-              </select>
-            </div>
-          </div>
 
           {/* Blog Posts Grid */}
           {loading ? (
