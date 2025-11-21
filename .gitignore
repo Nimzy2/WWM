@@ -61,7 +61,7 @@ dist
 
 # Gatsby files
 .cache/
-public
+# Note: public folder is NOT ignored for Create React App - it needs to be committed
 
 # vuepress build output
 .vuepress/dist
