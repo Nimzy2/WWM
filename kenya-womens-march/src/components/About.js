@@ -171,26 +171,6 @@ const About = () => {
           <div className="absolute inset-0 bg-gradient-to-r from-[#43245A]/95 via-[#43245A]/90 to-[#43245A]/85"></div>
         </div>
 
-        {/* Navigation Arrows */}
-        <button
-          onClick={handlePrev}
-          className="absolute left-2 sm:left-4 md:left-6 top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white p-2 sm:p-3 md:p-4 rounded-full shadow-xl transition-all duration-300 z-20 group"
-          aria-label="Previous image"
-        >
-          <svg className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-        </button>
-        <button
-          onClick={handleNext}
-          className="absolute right-2 sm:right-4 md:right-6 top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white p-2 sm:p-3 md:p-4 rounded-full shadow-xl transition-all duration-300 z-20 group"
-          aria-label="Next image"
-        >
-          <svg className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-          </svg>
-        </button>
-
         {/* Dots Indicator */}
         <div className="absolute bottom-4 sm:bottom-6 md:bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-2 sm:space-x-3 z-20">
           {storyImages.map((_, idx) => (

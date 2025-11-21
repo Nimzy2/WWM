@@ -446,7 +446,7 @@ const Blogs = () => {
             </div>
 
             {/* Trending Sidebar - Right Side (1 column) */}
-            <div className="lg:col-span-1">
+            <div className="lg:col-span-1 hidden lg:block">
               <div className="bg-[#43245A] rounded-lg p-4 sm:p-6 md:p-8 relative overflow-hidden">
                 {/* Decorative Background Elements */}
                 <div className="absolute inset-0 opacity-10">
