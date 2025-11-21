@@ -397,13 +397,13 @@ const Contact = () => {
                     <h4 className="font-bold text-primary text-base sm:text-lg mb-2 sm:mb-3">Email</h4>
                     <div className="mb-2 sm:mb-3">
                       <p className="text-xs sm:text-sm font-semibold text-primary/80 mb-1">General Email:</p>
-                      <a href="mailto:worldmarchofwomenkenya@gmail.com" className="text-text/80 hover:text-primary transition-colors duration-200 text-xs sm:text-base break-words overflow-wrap-anywhere block">
+                      <a href="mailto:worldmarchofwomenkenya@gmail.com" className="text-text/80 hover:text-primary transition-colors duration-200 text-[10px] sm:text-base whitespace-nowrap block overflow-x-auto">
                         worldmarchofwomenkenya@gmail.com
                       </a>
                     </div>
                     <div>
                       <p className="text-xs sm:text-sm font-semibold text-primary/80 mb-1">Communications Email:</p>
-                      <a href="mailto:communications@worldmarchofwomenkenya.co.ke" className="text-text/80 hover:text-primary transition-colors duration-200 text-xs sm:text-base break-words overflow-wrap-anywhere block">
+                      <a href="mailto:communications@worldmarchofwomenkenya.co.ke" className="text-text/80 hover:text-primary transition-colors duration-200 text-[10px] sm:text-base whitespace-nowrap block overflow-x-auto">
                         communications@worldmarchofwomenkenya.co.ke
                       </a>
                     </div>
