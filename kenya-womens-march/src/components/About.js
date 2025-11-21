@@ -152,139 +152,200 @@ const About = () => {
   const projectsRef = useCountUp(stats[3].value);
 
   return (
-    <div className="min-h-screen py-8 md:py-12 font-sans bg-gradient-to-br from-[#EBE2F2] via-[#F8F4FC] to-[#B6A8C1] animate-gradient-slow relative overflow-x-hidden">
+    <div className="min-h-screen font-sans bg-gradient-to-br from-gray-50 via-white to-purple-50">
       <SEOHead 
         title="About Us"
         description="Learn about World March of Women Kenya's mission to empower women, transform communities, and shape Kenya's future through grassroots mobilization and feminist leadership."
         keywords="about WMW Kenya, women's movement Kenya, feminist leadership, grassroots mobilization, women's rights advocacy, community transformation, gender equality Kenya"
       />
       
-      {/* Animated Wavy Divider Top */}
-      <div className="absolute top-0 left-0 w-full -z-10">
-        <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-16 md:h-24">
-          <path fill="#B6A8C1" fillOpacity="0.25" d="M0,64L48,74.7C96,85,192,107,288,117.3C384,128,480,128,576,117.3C672,107,768,85,864,74.7C960,64,1056,64,1152,80C1248,96,1344,128,1392,144L1440,160L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z" />
-        </svg>
-      </div>
-      {/* Hero Section */}
-      <section className="max-w-6xl mx-auto px-4 text-center mb-12 md:mb-16">
-        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4 md:mb-6 text-transparent bg-clip-text bg-gradient-to-r from-[#43245A] via-[#B6A8C1] to-[#43245A] animate-fade-in-up drop-shadow-lg tracking-tight">World March of Women Kenya</h1>
-        <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-[#232323] mb-6 md:mb-8 font-medium max-w-3xl mx-auto animate-fade-in-up delay-100">
-          Empowering women. Transforming communities. Shaping Kenya's future.
-        </p>
-        <div className="text-base sm:text-lg md:text-xl text-[#43245A] font-semibold mb-3 md:mb-4 italic animate-fade-in-up delay-200">
-          "When women rise, Kenya rises."
-        </div>
-        <p className="text-sm sm:text-base md:text-lg text-[#232323] max-w-2xl mx-auto animate-fade-in-up delay-300 leading-relaxed">
-          We are a grassroots movement dedicated to advancing gender equality, amplifying women's voices, and building a just, inclusive society for all Kenyans.
-        </p>
-      </section>
-      {/* Impact Statistics */}
-      <section className="max-w-5xl mx-auto mb-16 md:mb-20 grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 text-center px-4">
-        {stats.map((stat, i) => (
-          <div key={stat.label} className="bg-[#B6A8C1] rounded-xl py-6 md:py-8 shadow-md animate-fade-in-up" style={{ animationDelay: `${i * 100}ms` }}>
-            <div ref={[memberRef, countiesRef, empoweredRef, projectsRef][i]} className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-[#43245A] mb-2">0</div>
-            <div className="text-sm sm:text-base md:text-lg text-[#232323] font-semibold">{stat.label}</div>
-          </div>
-        ))}
-      </section>
-      {/* Wavy Divider */}
-      <div className="w-full -mb-6 md:-mb-8">
-        <svg viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-12 md:h-16">
-          <path fill="#B6A8C1" fillOpacity="0.18" d="M0,32L48,37.3C96,43,192,53,288,58.7C384,64,480,64,576,58.7C672,53,768,43,864,37.3C960,32,1056,32,1152,40C1248,48,1344,64,1392,72L1440,80L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z" />
-        </svg>
-      </div>
-      {/* Our Story */}
-      <section className="relative max-w-6xl mx-auto mb-16 md:mb-20 flex flex-col lg:flex-row items-center justify-center gap-8 md:gap-16 pt-6 md:pt-8 px-4">
-        {/* Text Card */}
-        <div className="relative bg-gradient-to-br from-white/80 via-[#F8F4FC]/80 to-[#B6A8C1]/60 backdrop-blur-lg border border-[#B6A8C1]/30 rounded-3xl shadow-xl p-6 md:p-8 lg:p-12 flex-1 z-10 mt-6 md:mt-0">
-          <div className="absolute -top-4 md:-top-6 left-6 md:left-8 w-8 h-8 md:w-10 md:h-10 bg-gradient-to-br from-[#B6A8C1] to-[#43245A] rounded-full shadow-lg"></div>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#43245A] mb-3 md:mb-4">Our Story</h2>
-          <blockquote className="italic text-base sm:text-lg text-[#5c357a] font-semibold mb-3 md:mb-4 border-l-4 border-[#B6A8C1] pl-3 md:pl-4">
-            "They are not weak—they are weary. But with us, they do not find charity. They find solidarity."
-          </blockquote>
-          <div className="space-y-3 md:space-y-4 text-[#232323] text-sm sm:text-base md:text-lg leading-relaxed">
-            <p>
-              <span className="font-bold text-[#43245A]">Since 2007</span>, WMW-Kenya has been a home for women who refuse to accept injustice as fate. Born under the banner of the <span className="font-semibold text-[#B6A8C1]">Feminist Organizing School Africa</span>, our movement brings together Kenyan women from across the country—urban and rural, young and old, queer and cisgender, workers and mothers—into a shared commitment: to organize against patriarchy, capitalism, and all forms of oppression.
-            </p>
-            <p>
-              We believe that <span className="font-semibold text-[#43245A]">women's liberation is inseparable from the liberation of all oppressed people</span>. Our work spans from grassroots community organizing to national policy advocacy, always centering the voices and leadership of those most affected by injustice.
-            </p>
-            <p>
-              Through popular education, direct action, and solidarity building, we're creating a Kenya where every woman can live with dignity, safety, and the power to shape her own destiny.
-            </p>
-          </div>
+      {/* Hero Section - Modern Gradient with Image */}
+      <section className="relative min-h-[90vh] flex items-center overflow-hidden">
+        {/* Background Image with Overlay */}
+        <div className="absolute inset-0 z-0">
+          <img
+            src={storyImages[currentImage]}
+            alt={`Story image ${currentImage + 1}`}
+            className="w-full h-full object-cover transition-opacity duration-700"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#43245A]/95 via-[#43245A]/90 to-[#43245A]/85"></div>
         </div>
 
-        {/* Image Carousel */}
-        <div className="relative w-full max-w-md lg:max-w-lg flex-1">
-          <div className="relative overflow-hidden rounded-2xl shadow-2xl">
-            <img
-              src={storyImages[currentImage]}
-              alt={`Story image ${currentImage + 1}`}
-              className="w-full h-64 sm:h-80 md:h-96 object-cover transition-opacity duration-500"
+        {/* Navigation Arrows */}
+        <button
+          onClick={handlePrev}
+          className="absolute left-2 sm:left-4 md:left-6 top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white p-2 sm:p-3 md:p-4 rounded-full shadow-xl transition-all duration-300 z-20 group"
+          aria-label="Previous image"
+        >
+          <svg className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+        <button
+          onClick={handleNext}
+          className="absolute right-2 sm:right-4 md:right-6 top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white p-2 sm:p-3 md:p-4 rounded-full shadow-xl transition-all duration-300 z-20 group"
+          aria-label="Next image"
+        >
+          <svg className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+
+        {/* Dots Indicator */}
+        <div className="absolute bottom-4 sm:bottom-6 md:bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-2 sm:space-x-3 z-20">
+          {storyImages.map((_, idx) => (
+            <button
+              key={idx}
+              onClick={() => setCurrentImage(idx)}
+              className={`h-2 sm:h-3 rounded-full transition-all duration-300 ${
+                idx === currentImage ? 'bg-white w-6 sm:w-8' : 'bg-white/50 hover:bg-white/75 w-2 sm:w-3'
+              }`}
+              aria-label={`Go to image ${idx + 1}`}
             />
-            {/* Navigation Buttons */}
-            <button
-              onClick={handlePrev}
-              className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white text-primary p-2 rounded-full shadow-lg transition-all duration-200"
-              aria-label="Previous image"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
-            </button>
-            <button
-              onClick={handleNext}
-              className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white text-primary p-2 rounded-full shadow-lg transition-all duration-200"
-              aria-label="Next image"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
-            {/* Dots Indicator */}
-            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
-              {storyImages.map((_, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => setCurrentImage(idx)}
-                  className={`w-2 h-2 rounded-full transition-all duration-200 ${
-                    idx === currentImage ? 'bg-white' : 'bg-white/50'
-                  }`}
-                  aria-label={`Go to image ${idx + 1}`}
-                />
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Our Values */}
-      <section className="max-w-6xl mx-auto mb-16 md:mb-20 px-4">
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#43245A] text-center mb-8 md:mb-12 animate-fade-in">Our Values</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-          {values.map((value, idx) => (
-            <div
-              key={value.title}
-              className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 md:p-8 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
-              onClick={() => toggleExpand(idx)}
-            >
-              <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-[#43245A] mb-3 md:mb-4">{value.title}</h3>
-              <p className={`text-sm sm:text-base text-[#232323] leading-relaxed transition-all duration-300 ${
-                expanded[idx] ? 'line-clamp-none' : 'line-clamp-3'
-              }`}>
-                {value.desc}
-              </p>
-              <button className="mt-3 text-[#B6A8C1] hover:text-[#43245A] font-semibold text-sm transition-colors duration-200">
-                {expanded[idx] ? 'Show Less' : 'Read More'}
-              </button>
-            </div>
           ))}
         </div>
+
+        {/* Content */}
+        <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20 text-white">
+          <div className="max-w-3xl">
+            <div className="inline-block mb-4 sm:mb-6">
+              <span className="text-xs sm:text-sm md:text-base font-semibold tracking-wider uppercase bg-white/20 backdrop-blur-sm px-3 sm:px-4 py-1.5 sm:py-2 rounded-full">
+                About Us
+              </span>
+            </div>
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold mb-4 sm:mb-6 leading-tight">
+              World March of Women Kenya
+            </h1>
+            <p className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-4 sm:mb-6 text-purple-200">
+              Empowering women. Transforming communities. Shaping Kenya's future.
+            </p>
+            <p className="text-lg sm:text-xl md:text-2xl italic font-medium mb-6 sm:mb-8 text-purple-100">
+              "When women rise, Kenya rises."
+            </p>
+            <p className="text-base sm:text-lg md:text-xl leading-relaxed text-gray-100 max-w-2xl">
+              We are a grassroots movement dedicated to advancing gender equality, amplifying women's voices, and building a just, inclusive society for all Kenyans.
+            </p>
+          </div>
+        </div>
       </section>
 
-      {/* Leadership Team */}
-      {/* 'Our Leadership' section removed */}
+      {/* Impact Statistics - Modern Cards */}
+      <section className="relative -mt-8 sm:-mt-12 md:-mt-16 z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
+            {stats.map((stat, i) => (
+              <div 
+                key={stat.label} 
+                className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 shadow-xl sm:shadow-2xl hover:shadow-3xl transition-all duration-300 hover:-translate-y-1 sm:hover:-translate-y-2 border border-gray-100"
+              >
+                <div 
+                  ref={[memberRef, countiesRef, empoweredRef, projectsRef][i]} 
+                  className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold bg-gradient-to-r from-[#43245A] to-[#B6A8C1] bg-clip-text text-transparent mb-2 sm:mb-3"
+                >
+                  0
+                </div>
+                <div className="text-xs sm:text-sm md:text-base text-gray-600 font-semibold leading-tight">{stat.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Our Story Section - Modern Layout */}
+      <section className="py-12 sm:py-16 md:py-20 lg:py-28">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10 lg:gap-16 items-center">
+            {/* Image Gallery */}
+            <div className="relative order-2 lg:order-1">
+              <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl shadow-xl sm:shadow-2xl aspect-[4/3]">
+                <img
+                  src={storyImages[(currentImage + 1) % storyImages.length]}
+                  alt="Our work"
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+              </div>
+            </div>
+
+            {/* Text Content */}
+            <div className="space-y-4 sm:space-y-6 order-1 lg:order-2">
+              <div>
+                <span className="text-xs sm:text-sm font-semibold text-[#B6A8C1] uppercase tracking-wider">Our Story</span>
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mt-2 mb-4 sm:mb-6">
+                  Building a Movement Since 2007
+                </h2>
+              </div>
+              
+              <div className="space-y-4 sm:space-y-5 text-gray-700 text-base sm:text-lg leading-relaxed">
+                <p>
+                  <span className="font-bold text-[#43245A]">Since 2007</span>, WMW-Kenya has been a home for women who refuse to accept injustice as fate. Born under the banner of the <span className="font-semibold text-[#B6A8C1]">Feminist Organizing School Africa</span>, our movement brings together Kenyan women from across the country–urban and rural, young and old, queer and cisgender, workers and mothers into a shared commitment: to organize against patriarchy, capitalism, and all forms of oppression.
+                </p>
+                <p>
+                  We believe that <span className="font-semibold text-[#43245A]">women's liberation is inseparable from the liberation of all oppressed people</span>. Our work spans from grassroots community organizing to national policy advocacy, always centering the voices and leadership of those most affected by injustice.
+                </p>
+                <p>
+                  Through popular education, direct action, and solidarity building, we're creating a Kenya where every woman can live with dignity, safety, and the power to shape her own destiny.
+                </p>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Quote Section - Full Width */}
+      <section className="py-10 sm:py-12 md:py-16 bg-[#43245A]">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <blockquote className="text-lg sm:text-xl md:text-2xl italic font-semibold text-white text-center leading-relaxed">
+            "They are not weak—they are weary. But with us, they do not find charity. They find solidarity."
+          </blockquote>
+        </div>
+      </section>
+
+      {/* Our Values - Modern Grid */}
+      <section className="py-12 sm:py-16 md:py-20 lg:py-28 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-10 sm:mb-12 md:mb-16">
+            <span className="text-xs sm:text-sm font-semibold text-[#B6A8C1] uppercase tracking-wider">Our Foundation</span>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mt-2">
+              Our Values
+            </h2>
+            <p className="text-base sm:text-lg text-gray-600 mt-3 sm:mt-4 max-w-2xl mx-auto px-4">
+              The principles that guide our work and shape our movement
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
+            {values.map((value, idx) => (
+              <div
+                key={value.title}
+                className="group bg-gradient-to-br from-white to-gray-50 rounded-xl sm:rounded-2xl p-5 sm:p-6 md:p-8 shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer border border-gray-100 hover:border-[#B6A8C1]/50 hover:-translate-y-1"
+                onClick={() => toggleExpand(idx)}
+              >
+                <div className="flex items-start justify-between mb-3 sm:mb-4">
+                  <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 group-hover:text-[#43245A] transition-colors pr-2">
+                    {value.title}
+                  </h3>
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-br from-[#B6A8C1] to-[#43245A] flex items-center justify-center text-white font-bold text-sm sm:text-base opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
+                    {idx + 1}
+                  </div>
+                </div>
+                <p className={`text-sm sm:text-base text-gray-600 leading-relaxed transition-all duration-300 ${
+                  expanded[idx] ? 'line-clamp-none' : 'line-clamp-4'
+                }`}>
+                  {value.desc}
+                </p>
+                <button className="mt-3 sm:mt-4 text-[#43245A] hover:text-[#B6A8C1] font-semibold text-xs sm:text-sm transition-colors duration-200 flex items-center gap-2 group">
+                  {expanded[idx] ? 'Show Less' : 'Read More'}
+                  <svg className={`w-3 h-3 sm:w-4 sm:h-4 transition-transform ${expanded[idx] ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
     </div>
   );
 };

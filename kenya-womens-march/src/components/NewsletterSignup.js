@@ -60,11 +60,11 @@ const NewsletterSignup = ({
     switch (variant) {
       case 'compact':
         return {
-          container: "bg-white rounded-lg shadow-md p-4 md:p-6",
+          container: "bg-transparent rounded-lg p-0",
           title: "text-base md:text-lg font-bold text-primary mb-2",
           subtitle: "text-xs md:text-sm text-text mb-3 md:mb-4",
-          input: "w-full px-3 py-2 md:py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm md:text-base",
-          button: "w-full bg-primary text-white px-4 py-2 md:py-3 rounded-md font-semibold hover:bg-accent transition-colors duration-200 text-sm md:text-base"
+          input: "w-full px-4 py-3 md:py-4 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all duration-200 text-sm md:text-base bg-white",
+          button: "w-full sm:w-auto bg-gradient-to-r from-primary to-purple-700 text-white px-8 py-3 md:py-4 rounded-xl font-bold hover:from-purple-700 hover:to-primary transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 text-sm md:text-base whitespace-nowrap"
         };
       case 'footer':
         return {
@@ -114,7 +114,7 @@ const NewsletterSignup = ({
           </div>
         )}
         
-        <div className={variant === 'default' ? "flex flex-col sm:flex-row gap-3 md:gap-4" : "space-y-3 md:space-y-4"}>
+        <div className={variant === 'default' ? "flex flex-col sm:flex-row gap-3 md:gap-4" : variant === 'compact' ? "flex flex-col sm:flex-row gap-4" : "space-y-3 md:space-y-4"}>
           <input
             type="email"
             name="email"

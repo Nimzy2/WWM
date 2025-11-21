@@ -120,7 +120,20 @@ const NewsletterAdmin = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background py-6 md:py-8">
+    <div 
+      className="min-h-screen relative py-6 md:py-8"
+      style={{
+        backgroundImage: `url(/admin-login-bg.jpeg)`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        backgroundAttachment: 'fixed'
+      }}
+    >
+      {/* Overlay for better readability */}
+      <div className="absolute inset-0 bg-black/30"></div>
+      
+      <div className="relative z-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-white rounded-lg shadow-lg p-4 md:p-6">
           {/* Header */}
@@ -309,6 +322,7 @@ const NewsletterAdmin = () => {
             </div>
           )}
         </div>
+      </div>
       </div>
     </div>
   );

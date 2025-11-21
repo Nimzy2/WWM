@@ -40,6 +40,10 @@ CREATE POLICY "Allow authenticated users to view join requests" ON join_requests
 CREATE POLICY "Allow authenticated users to update join requests" ON join_requests
     FOR UPDATE USING (auth.role() = 'authenticated');
 
+-- Create policy to allow authenticated users to delete join requests
+CREATE POLICY "Allow authenticated users to delete join requests" ON join_requests
+    FOR DELETE USING (auth.role() = 'authenticated');
+
 -- Create a function to automatically update the updated_at timestamp
 CREATE OR REPLACE FUNCTION update_updated_at_column()
 RETURNS TRIGGER AS $$

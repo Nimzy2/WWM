@@ -1,8 +1,24 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import NewsletterSignup from './NewsletterSignup';
 
+// Helper function to scroll to top
+const scrollToTop = () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+
 const Footer = () => {
+  const navigate = useNavigate();
+
+  const handleLinkClick = (e, path) => {
+    e.preventDefault();
+    navigate(path);
+    // Small delay to ensure navigation happens first
+    setTimeout(() => {
+      scrollToTop();
+    }, 100);
+  };
+
   return (
     <div className="relative z-50 bg-white bg-opacity-90 shadow">
       <footer className="bg-primary text-white">
@@ -71,23 +87,48 @@ const Footer = () => {
               <h4 className="text-lg md:text-xl font-semibold mb-4">Quick Links</h4>
               <ul className="space-y-2 md:space-y-3">
                 <li>
-                  <Link to="/about" className="text-accent hover:text-white transition-colors text-sm md:text-base">
+                  <Link 
+                    to="/about" 
+                    onClick={(e) => handleLinkClick(e, '/about')}
+                    className="text-accent hover:text-white transition-colors text-sm md:text-base"
+                  >
                     About Us
                   </Link>
                 </li>
                 <li>
-                  <Link to="/blogs" className="text-accent hover:text-white transition-colors text-sm md:text-base">
+                  <Link 
+                    to="/blogs" 
+                    onClick={(e) => handleLinkClick(e, '/blogs')}
+                    className="text-accent hover:text-white transition-colors text-sm md:text-base"
+                  >
                     Blogs
                   </Link>
                 </li>
                 <li>
-                  <Link to="/join" className="text-accent hover:text-white transition-colors text-sm md:text-base">
+                  <Link 
+                    to="/join" 
+                    onClick={(e) => handleLinkClick(e, '/join')}
+                    className="text-accent hover:text-white transition-colors text-sm md:text-base"
+                  >
                     Join Us
                   </Link>
                 </li>
                 <li>
-                  <Link to="/contact" className="text-accent hover:text-white transition-colors text-sm md:text-base">
+                  <Link 
+                    to="/contact" 
+                    onClick={(e) => handleLinkClick(e, '/contact')}
+                    className="text-accent hover:text-white transition-colors text-sm md:text-base"
+                  >
                     Contact
+                  </Link>
+                </li>
+                <li>
+                  <Link 
+                    to="/admin/login" 
+                    onClick={(e) => handleLinkClick(e, '/admin/login')}
+                    className="text-accent hover:text-white transition-colors text-sm md:text-base"
+                  >
+                    Admin
                   </Link>
                 </li>
               </ul>
@@ -96,10 +137,15 @@ const Footer = () => {
             {/* Contact Info */}
             <div>
               <h4 className="text-lg md:text-xl font-semibold mb-4">Contact</h4>
-              <div className="space-y-2 md:space-y-3 text-accent text-sm md:text-base">
-                <p>Email: worldmarchofwomenkenya@gmail.com</p>
-                <p>P.O. Box 16049-00100</p>
-                <p>Nairobi, Kenya</p>
+              <div className="space-y-2 md:space-y-3 text-accent text-xs md:text-sm">
+                <div>
+                  <p className="mb-1">General Email:</p>
+                  <p className="break-words text-xs md:text-sm">worldmarchofwomenkenya@gmail.com</p>
+                </div>
+                <div>
+                  <p className="mb-1">Communications Email:</p>
+                  <p className="break-words text-xs md:text-sm">communications@worldmarchofwomenkenya.co.ke</p>
+                </div>
               </div>
             </div>
           </div>
@@ -116,7 +162,11 @@ const Footer = () => {
           <div className="border-t border-accent mt-8 pt-8 text-center text-accent">
             <p className="text-sm md:text-base">&copy; 2025 World March of Women Kenya. All rights reserved.</p>
             <div className="mt-2 space-x-4 text-xs md:text-sm">
-              <Link to="/unsubscribe" className="hover:text-white transition-colors">
+              <Link 
+                to="/unsubscribe" 
+                onClick={(e) => handleLinkClick(e, '/unsubscribe')}
+                className="hover:text-white transition-colors"
+              >
                 Unsubscribe
               </Link>
             </div>
