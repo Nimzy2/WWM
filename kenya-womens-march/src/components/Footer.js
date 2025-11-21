@@ -146,6 +146,10 @@ const Footer = () => {
                   <p className="mb-1">Communications Email:</p>
                   <p className="break-words text-xs md:text-sm">communications@worldmarchofwomenkenya.co.ke</p>
                 </div>
+                <div>
+                  <p className="mb-1">Address:</p>
+                  <p className="text-xs md:text-sm">P.O. Box 16049-00100<br />Nairobi, Kenya</p>
+                </div>
               </div>
             </div>
           </div>
