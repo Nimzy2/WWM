@@ -194,9 +194,21 @@ const PublicationEditor = () => {
         setNotification({ message: '', type: 'success' });
       }, 3000);
     } catch (err) {
-      setError(err.message || 'Failed to upload file. Please try again.');
+      console.error('Upload error:', err);
+      const errorMessage = err.message || 'Failed to upload file. Please try again.';
+      setError(errorMessage);
       setUploadProgress('');
       setSelectedFile(null);
+      
+      // Show detailed error in notification
+      setNotification({ 
+        message: errorMessage, 
+        type: 'error' 
+      });
+      
+      setTimeout(() => {
+        setNotification({ message: '', type: 'success' });
+      }, 5000);
     } finally {
       setUploading(false);
       e.target.value = ''; // Reset file input

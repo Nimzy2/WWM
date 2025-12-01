@@ -21,9 +21,9 @@ To enable file uploads for publications, you need to set up a Supabase Storage b
      - **Upload**: Allow authenticated users to upload files
      - **Read**: Allow public to read files (if bucket is public, this is automatic)
 
-## Storage Policies SQL (Optional)
+## Storage Policies SQL (REQUIRED)
 
-If you want to set up Row Level Security policies for the storage bucket, run this SQL in your Supabase SQL Editor:
+**IMPORTANT:** You MUST set up storage policies for uploads to work. Run this SQL in your Supabase SQL Editor:
 
 ```sql
 -- Allow authenticated users to upload files
@@ -37,6 +37,30 @@ CREATE POLICY "Allow public reads"
 ON storage.objects FOR SELECT
 TO public
 USING (bucket_id = 'publications');
+
+-- Allow authenticated users to update their own files (optional)
+CREATE POLICY "Allow authenticated updates"
+ON storage.objects FOR UPDATE
+TO authenticated
+USING (bucket_id = 'publications');
+
+-- Allow authenticated users to delete files (optional)
+CREATE POLICY "Allow authenticated deletes"
+ON storage.objects FOR DELETE
+TO authenticated
+USING (bucket_id = 'publications');
+```
+
+**Note:** If you get an error that the policy already exists, you can drop and recreate it:
+
+```sql
+-- Drop existing policies if they exist
+DROP POLICY IF EXISTS "Allow authenticated uploads" ON storage.objects;
+DROP POLICY IF EXISTS "Allow public reads" ON storage.objects;
+DROP POLICY IF EXISTS "Allow authenticated updates" ON storage.objects;
+DROP POLICY IF EXISTS "Allow authenticated deletes" ON storage.objects;
+
+-- Then create them again using the SQL above
 ```
 
 ## File Size Limits

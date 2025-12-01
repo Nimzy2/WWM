@@ -243,6 +243,12 @@ export async function uploadImage(file, path = 'blog-images') {
 // Publication file upload helper (PDF, Word documents)
 export async function uploadPublicationFile(file) {
   try {
+    // Check if user is authenticated
+    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+    if (sessionError || !session) {
+      throw new Error('You must be logged in to upload files. Please log in and try again.');
+    }
+
     // Validate file type
     const fileExtension = file.name.split('.').pop().toLowerCase();
     const allowedTypes = ['pdf', 'doc', 'docx'];
@@ -262,6 +268,8 @@ export async function uploadPublicationFile(file) {
     const sanitizedFileName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
     const filePath = `publications/${timestamp}-${sanitizedFileName}`;
 
+    console.log('Uploading file:', file.name, 'Size:', file.size, 'Path:', filePath);
+
     // Upload file to Supabase Storage
     const { data, error } = await supabase.storage
       .from('publications')
@@ -271,17 +279,41 @@ export async function uploadPublicationFile(file) {
       });
 
     if (error) {
-      // If bucket doesn't exist, provide helpful error
-      if (error.message?.includes('Bucket not found') || error.message?.includes('not found')) {
-        throw new Error('Storage bucket "publications" not found. Please create it in Supabase Storage first.');
+      console.error('Storage upload error:', error);
+      
+      // Provide specific error messages
+      if (error.message?.includes('Bucket not found') || error.message?.includes('not found') || error.statusCode === 404) {
+        throw new Error('Storage bucket "publications" not found. Please create it in Supabase Storage (Storage → New bucket → Name: "publications" → Public).');
       }
-      throw error;
+      
+      if (error.message?.includes('new row violates row-level security') || error.message?.includes('permission denied') || error.statusCode === 403) {
+        throw new Error('Permission denied. Please check your Supabase Storage policies. The bucket needs policies to allow authenticated users to upload files.');
+      }
+      
+      if (error.message?.includes('duplicate') || error.statusCode === 409) {
+        throw new Error('A file with this name already exists. Please rename your file and try again.');
+      }
+      
+      // Generic error with details
+      throw new Error(`Upload failed: ${error.message || 'Unknown error'}. Please check your Supabase Storage configuration.`);
     }
+
+    if (!data) {
+      throw new Error('Upload failed: No data returned from storage.');
+    }
+
+    console.log('File uploaded successfully:', data.path);
 
     // Get public URL
     const { data: urlData } = supabase.storage
       .from('publications')
       .getPublicUrl(filePath);
+
+    if (!urlData || !urlData.publicUrl) {
+      throw new Error('Failed to get public URL for uploaded file.');
+    }
+
+    console.log('Public URL:', urlData.publicUrl);
 
     return {
       url: urlData.publicUrl,
@@ -290,8 +322,18 @@ export async function uploadPublicationFile(file) {
       fileSize: file.size
     };
   } catch (err) {
-    console.error('File upload error:', err);
-    throw new Error(err.message || 'Failed to upload file. Please try again.');
+    console.error('File upload error details:', {
+      message: err.message,
+      error: err,
+      fileName: file?.name,
+      fileSize: file?.size
+    });
+    
+    // Re-throw with user-friendly message
+    if (err.message) {
+      throw err;
+    }
+    throw new Error('Failed to upload file. Please try again or check your Supabase Storage configuration.');
   }
 }
 
