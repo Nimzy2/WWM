@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://www.worldmarchofwomenkenya.co.ke/sitemap.xml
+
+# Disallow admin and test pages
+Disallow: /admin/
+Disallow: /test
+Disallow: /test-dashboard
+Disallow: /db-test
+Disallow: /validation-test
+
