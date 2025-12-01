@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAdmin } from '../contexts/AdminContext';
-import { fetchAllBlogs, getBlogStats, fetchContactMessages, fetchJoinRequests, fetchSubscribers } from '../supabaseHelpers';
+import { fetchAllBlogs, getBlogStats, fetchContactMessages, fetchJoinRequests, fetchSubscribers, getPublicationStats } from '../supabaseHelpers';
 
 const AdminDashboard = () => {
   const { logout, isWriter } = useAdmin();
   const [stats, setStats] = useState({
     blogs: { total: 0, published: 0, unpublished: 0, recent: 0 },
+    publications: { total: 0, published: 0, unpublished: 0, recent: 0 },
     subscribers: 0,
     messages: 0,
     joinRequests: 0
@@ -23,9 +24,10 @@ const AdminDashboard = () => {
   const loadDashboardData = async () => {
     try {
       setLoading(true);
-      const [blogStats, blogs, subscribers, messages, joinRequestsData] = await Promise.all([
+      const [blogStats, blogs, publicationStats, subscribers, messages, joinRequestsData] = await Promise.all([
         getBlogStats(),
         fetchAllBlogs(true).catch(() => []),
+        getPublicationStats().catch(() => ({ total: 0, published: 0, unpublished: 0, recent: 0 })),
         fetchSubscribers().catch(() => []),
         fetchContactMessages().catch(() => []),
         fetchJoinRequests().catch(() => [])
@@ -33,6 +35,7 @@ const AdminDashboard = () => {
 
       setStats({
         blogs: blogStats,
+        publications: publicationStats,
         subscribers: subscribers.length,
         messages: messages.length,
         joinRequests: joinRequestsData.length
@@ -155,6 +158,12 @@ const AdminDashboard = () => {
           >
             Manage Posts
           </Link>
+          <Link
+            to="/admin/publications"
+            className="bg-white text-primary border-2 border-primary px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold hover:bg-primary hover:text-white transition-colors duration-200 text-sm sm:text-base"
+          >
+            Manage Publications
+          </Link>
           {!isWriter && (
             <>
               <Link
@@ -200,6 +209,14 @@ const AdminDashboard = () => {
                 subtitle={`${stats.blogs.recent} in last 30 days`}
                 icon="✅"
                 color="green"
+              />
+              <StatCard
+                title="Publications"
+                value={stats.publications.total}
+                subtitle={`${stats.publications.published} published, ${stats.publications.unpublished} drafts`}
+                icon="📄"
+                color="blue"
+                to="/admin/publications"
               />
               {!isWriter && (
                 <>

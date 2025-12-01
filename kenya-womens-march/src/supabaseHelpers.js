@@ -349,3 +349,211 @@ export async function createComment(comment) {
   }
   return data;
 }
+
+// PUBLICATIONS CRUD
+export async function fetchPublications(limit = null) {
+  let query = supabase
+    .from('publications')
+    .select('id, title, description, author, authors, publication_date, category, file_url, file_name, thumbnail_url, tags, published, created_at')
+    .eq('published', true)
+    .order('publication_date', { ascending: false });
+  
+  if (limit) {
+    query = query.limit(limit);
+  }
+  
+  const { data, error } = await query;
+  if (error) {
+    console.warn('Publications query failed:', error.message);
+    // Fallback to select all
+    let fallbackQuery = supabase
+      .from('publications')
+      .select('*')
+      .eq('published', true)
+      .order('created_at', { ascending: false });
+    
+    if (limit) {
+      fallbackQuery = fallbackQuery.limit(limit);
+    }
+    
+    const fallbackResult = await fallbackQuery;
+    if (fallbackResult.error) throw fallbackResult.error;
+    return fallbackResult.data;
+  }
+  return data;
+}
+
+export async function fetchPublicationById(id, includeUnpublished = false) {
+  let query = supabase
+    .from('publications')
+    .select('*')
+    .eq('id', id);
+  
+  if (!includeUnpublished) {
+    query = query.eq('published', true);
+  }
+  
+  const { data, error } = await query.single();
+  
+  if (error) {
+    // Fallback without published filter if needed
+    if (!includeUnpublished) {
+      const { data: allData, error: allError } = await supabase
+        .from('publications')
+        .select('*')
+        .eq('id', id)
+        .single();
+      if (allError) throw allError;
+      return allData;
+    }
+    throw error;
+  }
+  return data;
+}
+
+export async function createPublication(publication) {
+  try {
+    const { data, error } = await supabase
+      .from('publications')
+      .insert([publication])
+      .select()
+      .single();
+    
+    if (error) {
+      console.error('Create publication error:', error);
+      throw new Error(error.message || 'Failed to create publication');
+    }
+    return data;
+  } catch (err) {
+    if (err.message) throw err;
+    throw new Error('Failed to create publication: ' + (err.message || 'Unknown error'));
+  }
+}
+
+export async function updatePublication(id, updates) {
+  try {
+    const { data, error } = await supabase
+      .from('publications')
+      .update(updates)
+      .eq('id', id)
+      .select()
+      .single();
+    
+    if (error) {
+      console.error('Update publication error:', error);
+      throw new Error(error.message || 'Failed to update publication');
+    }
+    return data;
+  } catch (err) {
+    if (err.message) throw err;
+    throw new Error('Failed to update publication: ' + (err.message || 'Unknown error'));
+  }
+}
+
+export async function deletePublication(id) {
+  const { error } = await supabase
+    .from('publications')
+    .delete()
+    .eq('id', id);
+  
+  if (error) throw error;
+}
+
+export async function fetchAllPublications(includeUnpublished = false, limit = null) {
+  let query = supabase
+    .from('publications')
+    .select('id, title, description, author, authors, publication_date, category, file_url, file_name, thumbnail_url, tags, published, created_at');
+  
+  if (!includeUnpublished) {
+    query = query.eq('published', true);
+  }
+  
+  query = query.order('publication_date', { ascending: false });
+  
+  if (limit) {
+    query = query.limit(limit);
+  }
+  
+  const { data, error } = await query;
+  
+  if (error) {
+    console.warn('Publications query failed, falling back:', error.message);
+    let fallbackQuery = supabase.from('publications').select('*');
+    
+    if (!includeUnpublished) {
+      fallbackQuery = fallbackQuery.eq('published', true);
+    }
+    
+    fallbackQuery = fallbackQuery.order('created_at', { ascending: false });
+    
+    if (limit) {
+      fallbackQuery = fallbackQuery.limit(limit);
+    }
+    
+    const fallbackResult = await fallbackQuery;
+    if (fallbackResult.error) throw fallbackResult.error;
+    return fallbackResult.data;
+  }
+  
+  return data;
+}
+
+export async function publishPublication(id) {
+  try {
+    const { data, error } = await supabase
+      .from('publications')
+      .update({ published: true, published_at: new Date().toISOString() })
+      .eq('id', id)
+      .select()
+      .single();
+    
+    if (error) throw error;
+    return data;
+  } catch (err) {
+    console.error('Publish publication error:', err);
+    throw new Error(err.message || 'Failed to publish publication');
+  }
+}
+
+export async function unpublishPublication(id) {
+  try {
+    const { data, error } = await supabase
+      .from('publications')
+      .update({ published: false })
+      .eq('id', id)
+      .select()
+      .single();
+    
+    if (error) throw error;
+    return data;
+  } catch (err) {
+    console.error('Unpublish publication error:', err);
+    throw new Error(err.message || 'Failed to unpublish publication');
+  }
+}
+
+export async function getPublicationStats() {
+  const { data: allPublications, error } = await supabase
+    .from('publications')
+    .select('id, published, created_at');
+  
+  if (error) throw error;
+  
+  const total = allPublications?.length || 0;
+  const published = allPublications?.filter(p => p.published)?.length || 0;
+  const unpublished = total - published;
+  
+  // Get recent publications (last 30 days)
+  const thirtyDaysAgo = new Date();
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+  const recent = allPublications?.filter(p => 
+    new Date(p.created_at) >= thirtyDaysAgo
+  )?.length || 0;
+  
+  return {
+    total,
+    published,
+    unpublished,
+    recent
+  };
+}

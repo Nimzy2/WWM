@@ -23,7 +23,7 @@ const Footer = () => {
     <div className="relative z-50 bg-white bg-opacity-90 shadow">
       <footer className="bg-primary text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 md:gap-8">
             {/* Logo and Description */}
             <div className="col-span-1 sm:col-span-2">
               <h3 className="text-lg md:text-xl font-bold mb-4">World March of Women Kenya</h3>
@@ -129,6 +129,22 @@ const Footer = () => {
                     className="text-accent hover:text-white transition-colors text-sm md:text-base"
                   >
                     Admin
+                  </Link>
+                </li>
+              </ul>
+            </div>
+
+            {/* Publications Section */}
+            <div>
+              <h4 className="text-lg md:text-xl font-semibold mb-4">Publications</h4>
+              <ul className="space-y-2 md:space-y-3">
+                <li>
+                  <Link 
+                    to="/publications" 
+                    onClick={(e) => handleLinkClick(e, '/publications')}
+                    className="text-accent hover:text-white transition-colors text-sm md:text-base"
+                  >
+                    View All Publications
                   </Link>
                 </li>
               </ul>

@@ -16,7 +16,7 @@ const actionAreas = [
     gradient: "from-purple-500 to-pink-500"
   },
   {
-    title: "Economic Empowerment",
+    title: "Feminist Economy",
     icon: (
       <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -71,7 +71,7 @@ const Home = () => {
     <div className="min-h-screen bg-white">
       <SEOHead 
         title="Home"
-        description="Join the movement for equality, justice, and opportunity for every woman in Kenya. World March of Women Kenya empowers women through advocacy, education, and grassroots mobilization."
+        description="Join us, a movement for equality, justice, and opportunity for every woman in Kenya. World March of Women Kenya empowers women through advocacy, education, and grassroots mobilization."
         keywords="women's rights Kenya, gender equality, women empowerment, social justice, grassroots mobilization, feminist movement, women's advocacy, community development"
       />
       
@@ -108,7 +108,7 @@ const Home = () => {
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black text-white leading-tight drop-shadow-2xl animate-fade-in-up px-2">
               <span className="block mb-1 sm:mb-2">Empowering</span>
               <span className="block bg-gradient-to-r from-white via-pink-100 to-white bg-clip-text text-transparent">
-                Kenyan Women
+                Kenyan Women,
               </span>
               <span className="block mt-1 sm:mt-2">Transforming Communities</span>
             </h1>

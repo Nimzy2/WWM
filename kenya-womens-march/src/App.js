@@ -26,6 +26,9 @@ import PostManagement from './components/PostManagement';
 import ProtectedRoute from './components/ProtectedRoute';
 import ScrollToTop from './components/ScrollToTop';
 import ContactMessagesAdmin from './components/ContactMessagesAdmin';
+import Publications from './components/Publications';
+import PublicationManagement from './components/PublicationManagement';
+import PublicationEditor from './components/PublicationEditor';
 
 function App() {
   return (
@@ -56,6 +59,7 @@ function App() {
                 <Route path="/blog/:id" element={<BlogPost />} />
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/join" element={<Join />} />
+                <Route path="/publications" element={<Publications />} />
                 <Route path="/newsletter-admin" element={<NewsletterAdmin />} />
                 <Route path="/unsubscribe" element={<NewsletterUnsubscribe />} />
                 <Route path="/test" element={<FormTester />} />
@@ -118,6 +122,30 @@ function App() {
                   element={
                     <ProtectedRoute allowedRoles={['admin', 'writer']}>
                       <PostEditor />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin/publications"
+                  element={
+                    <ProtectedRoute allowedRoles={['admin', 'writer']}>
+                      <PublicationManagement />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin/publications/new"
+                  element={
+                    <ProtectedRoute allowedRoles={['admin', 'writer']}>
+                      <PublicationEditor />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin/publications/edit/:id"
+                  element={
+                    <ProtectedRoute allowedRoles={['admin', 'writer']}>
+                      <PublicationEditor />
                     </ProtectedRoute>
                   }
                 />
