@@ -240,6 +240,61 @@ export async function uploadImage(file, path = 'blog-images') {
   };
 }
 
+// Publication file upload helper (PDF, Word documents)
+export async function uploadPublicationFile(file) {
+  try {
+    // Validate file type
+    const fileExtension = file.name.split('.').pop().toLowerCase();
+    const allowedTypes = ['pdf', 'doc', 'docx'];
+    
+    if (!allowedTypes.includes(fileExtension)) {
+      throw new Error('Invalid file type. Please upload a PDF, DOC, or DOCX file.');
+    }
+
+    // Validate file size (max 50MB)
+    const maxSize = 50 * 1024 * 1024; // 50MB in bytes
+    if (file.size > maxSize) {
+      throw new Error('File size exceeds 50MB limit. Please upload a smaller file.');
+    }
+
+    // Create a unique filename
+    const timestamp = Date.now();
+    const sanitizedFileName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
+    const filePath = `publications/${timestamp}-${sanitizedFileName}`;
+
+    // Upload file to Supabase Storage
+    const { data, error } = await supabase.storage
+      .from('publications')
+      .upload(filePath, file, {
+        cacheControl: '3600',
+        upsert: false
+      });
+
+    if (error) {
+      // If bucket doesn't exist, provide helpful error
+      if (error.message?.includes('Bucket not found') || error.message?.includes('not found')) {
+        throw new Error('Storage bucket "publications" not found. Please create it in Supabase Storage first.');
+      }
+      throw error;
+    }
+
+    // Get public URL
+    const { data: urlData } = supabase.storage
+      .from('publications')
+      .getPublicUrl(filePath);
+
+    return {
+      url: urlData.publicUrl,
+      path: filePath,
+      fileName: file.name,
+      fileSize: file.size
+    };
+  } catch (err) {
+    console.error('File upload error:', err);
+    throw new Error(err.message || 'Failed to upload file. Please try again.');
+  }
+}
+
 // NEWSLETTER SUBSCRIBERS CRUD
 export async function fetchSubscribers() {
   const { data, error } = await supabase.from('newsletter_subscribers').select('*').order('subscribed_at', { ascending: false });
