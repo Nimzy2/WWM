@@ -81,3 +81,5 @@ After adding the favicon files:
 - The manifest.json is configured to use the favicon files
 - All favicon links are properly configured for cross-platform support
 
+
+
