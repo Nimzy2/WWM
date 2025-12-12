@@ -7,6 +7,21 @@ import image7 from '../wwmk_images/image7.jpeg';
 import image8 from '../wwmk_images/image8.jpeg';
 import image10 from '../wwmk_images/image10.jpeg';
 import image12 from '../wwmk_images/image12.jpeg';
+import wmk1 from '../wwmk_images/wmk1.jpg';
+import wmk2 from '../wwmk_images/wmk2.jpg';
+import wmk3 from '../wwmk_images/wmk3.jpg';
+import wmk4 from '../wwmk_images/wmk4.jpg';
+import wmk5 from '../wwmk_images/wmk5.jpg';
+import wmk6 from '../wwmk_images/wmk6.jpg';
+import wmk7 from '../wwmk_images/wmk7.jpg';
+import wmk8 from '../wwmk_images/wmk8.jpg';
+import wmk9 from '../wwmk_images/wmk9.jpg';
+import wmk10 from '../wwmk_images/wmk10.jpg';
+import wmk11 from '../wwmk_images/wmk11.jpg';
+import wmk12 from '../wwmk_images/wmk12.jpg';
+import wmk13 from '../wwmk_images/wmk13.jpg';
+import wmk14 from '../wwmk_images/wmk14.jpg';
+import wmk15 from '../wwmk_images/wmk15.jpg';
 
 // Helper for animated counters
 const useCountUp = (end, duration = 2000) => {
@@ -91,7 +106,29 @@ const values = [
   },
 ];
 
-const storyImages = [image0, image1, image7, image8, image10, image12];
+const storyImages = [
+  image0, 
+  image1, 
+  image7, 
+  image8, 
+  image10, 
+  image12,
+  wmk1,
+  wmk2,
+  wmk3,
+  wmk4,
+  wmk5,
+  wmk6,
+  wmk7,
+  wmk8,
+  wmk9,
+  wmk10,
+  wmk11,
+  wmk12,
+  wmk13,
+  wmk14,
+  wmk15
+];
 
 const About = () => {
   // Fetch stats from Supabase
@@ -115,6 +152,15 @@ const About = () => {
   };
   const handleNext = () => {
     setCurrentImage((prev) => (prev === storyImages.length - 1 ? 0 : prev + 1));
+  };
+
+  // Gallery state for bottom image gallery
+  const [galleryImage, setGalleryImage] = useState(0);
+  const handleGalleryPrev = () => {
+    setGalleryImage((prev) => (prev === 0 ? storyImages.length - 1 : prev - 1));
+  };
+  const handleGalleryNext = () => {
+    setGalleryImage((prev) => (prev === storyImages.length - 1 ? 0 : prev + 1));
   };
 
   // Auto-advance carousel every 7 seconds
@@ -237,13 +283,33 @@ const About = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10 lg:gap-16 items-center">
             {/* Image Gallery */}
             <div className="relative order-2 lg:order-1">
-              <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl shadow-xl sm:shadow-2xl aspect-[4/3]">
+              <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl shadow-xl sm:shadow-2xl aspect-[4/3] group">
                 <img
-                  src={storyImages[(currentImage + 1) % storyImages.length]}
+                  src={storyImages[galleryImage]}
                   alt="Our work"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover transition-opacity duration-500"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                
+                {/* Navigation Arrows */}
+                <button
+                  onClick={handleGalleryPrev}
+                  className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-[#43245A] p-2 sm:p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 opacity-0 group-hover:opacity-100 hover:scale-110 z-10"
+                  aria-label="Previous image"
+                >
+                  <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+                <button
+                  onClick={handleGalleryNext}
+                  className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-[#43245A] p-2 sm:p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 opacity-0 group-hover:opacity-100 hover:scale-110 z-10"
+                  aria-label="Next image"
+                >
+                  <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
               </div>
             </div>
 
