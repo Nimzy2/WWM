@@ -10,8 +10,6 @@ import Notification from './Notification';
 
 // Configure PDF.js worker - use .mjs format (ES modules) for version 5.4.394+
 if (typeof window !== 'undefined') {
-  const version = pdfjsLib.version || '5.4.394';
-  
   // Version 5.4.394+ uses .mjs format instead of .js
   // Try local file first (most reliable), then fallback to CDN
   // To download the worker file manually:
