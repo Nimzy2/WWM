@@ -41,45 +41,6 @@ const useCountUp = (end, duration = 2000) => {
   return ref;
 };
 
-const leadership = [
-  {
-    name: "Amina Ochieng",
-    role: "Executive Director",
-    bio: "Visionary leader with 15+ years championing women's rights and social justice in Kenya.",
-    img: 'https://ui-avatars.com/api/?name=Amina+Ochieng&background=B6A8C1&color=43245A&size=128',
-  },
-  {
-    name: "Sarah Muthoni",
-    role: "Programs Coordinator",
-    bio: "Expert in grassroots mobilization and community empowerment across all 47 counties.",
-    img: 'https://ui-avatars.com/api/?name=Sarah+Muthoni&background=B6A8C1&color=43245A&size=128',
-  },
-  {
-    name: "Fatima Hassan",
-    role: "Advocacy Director",
-    bio: "Leads policy initiatives, amplifying women's voices in government and society.",
-    img: 'https://ui-avatars.com/api/?name=Fatima+Hassan&background=B6A8C1&color=43245A&size=128',
-  },
-  {
-    name: "Grace Wanjiru",
-    role: "Finance Lead",
-    bio: "Ensures sustainable growth and transparency in all our financial operations.",
-    img: 'https://ui-avatars.com/api/?name=Grace+Wanjiru&background=B6A8C1&color=43245A&size=128',
-  },
-  {
-    name: "Janet Otieno",
-    role: "Communications Manager",
-    bio: "Drives our message of empowerment through media and public engagement.",
-    img: 'https://ui-avatars.com/api/?name=Janet+Otieno&background=B6A8C1&color=43245A&size=128',
-  },
-  {
-    name: "Linet Njeri",
-    role: "Youth Engagement Officer",
-    bio: "Inspires and mentors the next generation of women leaders in Kenya.",
-    img: 'https://ui-avatars.com/api/?name=Linet+Njeri&background=B6A8C1&color=43245A&size=128',
-  },
-];
-
 const values = [
   {
     title: "Solidarity",

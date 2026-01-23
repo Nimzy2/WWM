@@ -99,13 +99,6 @@ const BlogPost = () => {
     return tmp.textContent || tmp.innerText || '';
   };
 
-  const getReadingTime = () => {
-    const excerpt = post.excerpt ? stripHtmlTags(post.excerpt) : '';
-    const content = post.content ? stripHtmlTags(post.content) : '';
-    const text = excerpt || content;
-    if (!text) return 15;
-    return Math.ceil(text.split(' ').length / 200);
-  };
 
   const getExcerpt = () => {
     if (post.excerpt) {
@@ -316,7 +309,6 @@ const BlogPost = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
                 {recentPosts.map(rp => {
                   const rpImageUrl = getImageUrl(rp);
-                  const rpExcerpt = rp.excerpt ? stripHtmlTags(rp.excerpt) : '';
                   return (
                     <Link 
                       key={rp.id} 
