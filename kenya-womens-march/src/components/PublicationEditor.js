@@ -283,7 +283,7 @@ const PublicationEditor = () => {
     <div 
       className="min-h-screen relative"
       style={{
-        backgroundImage: `url(/admin-login-bg.jpeg)`,
+        backgroundImage: `url(/codioful.jpg)`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',

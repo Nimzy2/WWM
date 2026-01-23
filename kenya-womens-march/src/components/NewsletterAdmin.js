@@ -123,7 +123,7 @@ const NewsletterAdmin = () => {
     <div 
       className="min-h-screen relative py-6 md:py-8"
       style={{
-        backgroundImage: `url(/admin-login-bg.jpeg)`,
+        backgroundImage: `url(/codioful.jpg)`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',

@@ -37,7 +37,7 @@ const Join = () => {
 
   const interestOptions = [
     'Women\'s Rights Advocacy',
-    'Economic Empowerment',
+    'Feminist Economy',
     'Education & Training',
     'Health & Wellness',
     'Leadership Development',

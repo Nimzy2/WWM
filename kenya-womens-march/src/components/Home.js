@@ -106,11 +106,9 @@ const Home = () => {
             </div>
             
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black text-white leading-tight drop-shadow-2xl animate-fade-in-up px-2">
-              <span className="block mb-1 sm:mb-2">Empowering</span>
               <span className="block bg-gradient-to-r from-white via-pink-100 to-white bg-clip-text text-transparent">
-                Kenyan Women,
+                feminists across borders, not just sharing stories but bulding strategies to transform the world
               </span>
-              <span className="block mt-1 sm:mt-2">Transforming Communities</span>
             </h1>
             
             <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-white/95 font-light max-w-3xl mx-auto leading-relaxed animate-fade-in-up animation-delay-200 px-4">

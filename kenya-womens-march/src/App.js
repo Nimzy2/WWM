@@ -39,7 +39,7 @@ function App() {
           <div 
             className="App min-h-screen flex flex-col relative"
             style={{
-              backgroundImage: `url(/admin-login-bg.jpeg)`,
+              backgroundImage: `url(/codioful.jpg)`,
               backgroundSize: 'cover',
               backgroundPosition: 'center',
               backgroundRepeat: 'no-repeat',

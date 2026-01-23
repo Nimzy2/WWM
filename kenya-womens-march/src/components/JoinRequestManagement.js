@@ -181,7 +181,7 @@ const JoinRequestManagement = () => {
     <div 
       className="min-h-screen relative py-8"
       style={{
-        backgroundImage: `url(/admin-login-bg.jpeg)`,
+        backgroundImage: `url(/codioful.jpg)`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',

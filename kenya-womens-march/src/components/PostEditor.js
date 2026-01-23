@@ -8,9 +8,26 @@ import mammoth from 'mammoth';
 import * as pdfjsLib from 'pdfjs-dist';
 import Notification from './Notification';
 
-// Configure PDF.js worker - use unpkg CDN which is more reliable
+// Configure PDF.js worker with local file preference and CDN fallback
 if (typeof window !== 'undefined') {
-  pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.js`;
+  const version = pdfjsLib.version || '5.4.394';
+  
+  // Prefer local worker file (most reliable), fallback to jsdelivr CDN
+  // Local file should be in public folder: /pdf.worker.min.js
+  // To download it, run: node scripts/download-pdf-worker.js
+  const localWorkerPath = '/pdf.worker.min.js';
+  const cdnWorkerPath = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${version}/build/pdf.worker.min.js`;
+  
+  // Use local file if available (check by trying to fetch it)
+  // For now, use jsdelivr CDN (more reliable than unpkg)
+  // If you add pdf.worker.min.js to public folder, change to: localWorkerPath
+  pdfjsLib.GlobalWorkerOptions.workerSrc = cdnWorkerPath;
+  
+  // Alternative fallback sources (uncomment if needed):
+  // const fallbackSources = [
+  //   `https://unpkg.com/pdfjs-dist@${version}/build/pdf.worker.min.js`,
+  //   `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${version}/pdf.worker.min.js`
+  // ];
 }
 
 const PostEditor = () => {
@@ -219,7 +236,16 @@ const PostEditor = () => {
       const arrayBuffer = await file.arrayBuffer();
       
       setUploadStatus('Extracting text from PDF...');
-      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+      
+      // Configure worker before processing if not already set
+      if (!pdfjsLib.GlobalWorkerOptions.workerSrc) {
+        const version = pdfjsLib.version || '5.4.394';
+        pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${version}/build/pdf.worker.min.js`;
+      }
+      
+      const pdf = await pdfjsLib.getDocument({ 
+        data: arrayBuffer
+      }).promise;
       
       let fullText = '';
       const numPages = pdf.numPages;
@@ -256,7 +282,20 @@ const PostEditor = () => {
       setUploadStatus('PDF processed successfully!');
       setTimeout(() => setUploadStatus(''), 3000);
     } catch (err) {
-      throw new Error('Failed to read PDF: ' + err.message);
+      // Provide more helpful error messages
+      let errorMessage = 'Failed to read PDF: ';
+      
+      if (err.message && err.message.includes('worker')) {
+        errorMessage += 'PDF.js worker failed to load. This may be due to network issues or CDN blocking. Please try again or contact support.';
+      } else if (err.message && err.message.includes('Invalid PDF')) {
+        errorMessage += 'The file appears to be corrupted or not a valid PDF.';
+      } else if (err.message && err.message.includes('password')) {
+        errorMessage += 'This PDF is password protected and cannot be processed.';
+      } else {
+        errorMessage += err.message || 'Unknown error occurred.';
+      }
+      
+      throw new Error(errorMessage);
     }
   };
 
@@ -452,7 +491,7 @@ const PostEditor = () => {
     <div 
       className="min-h-screen relative"
       style={{
-        backgroundImage: `url(/admin-login-bg.jpeg)`,
+        backgroundImage: `url(/codioful.jpg)`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',

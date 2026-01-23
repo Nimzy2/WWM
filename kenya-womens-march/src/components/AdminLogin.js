@@ -78,7 +78,7 @@ const AdminLogin = () => {
     <div 
       className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative"
       style={{
-        backgroundImage: `url(/admin-login-bg.jpeg)`,
+        backgroundImage: `url(/codioful.jpg)`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',

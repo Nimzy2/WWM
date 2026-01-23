@@ -1,13 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { supabase } from '../supabaseClient';
 import SEOHead from './SEOHead';
-import image0 from '../wwmk_images/image0.jpeg';
-import image1 from '../wwmk_images/image1.jpeg';
 import image7 from '../wwmk_images/image7.jpeg';
 import image8 from '../wwmk_images/image8.jpeg';
 import image10 from '../wwmk_images/image10.jpeg';
 import image12 from '../wwmk_images/image12.jpeg';
-import wmk1 from '../wwmk_images/wmk1.jpg';
 import wmk2 from '../wwmk_images/wmk2.jpg';
 import wmk3 from '../wwmk_images/wmk3.jpg';
 import wmk4 from '../wwmk_images/wmk4.jpg';
@@ -107,13 +104,10 @@ const values = [
 ];
 
 const storyImages = [
-  image0, 
-  image1, 
   image7, 
   image8, 
   image10, 
   image12,
-  wmk1,
   wmk2,
   wmk3,
   wmk4,
@@ -243,7 +237,7 @@ const About = () => {
               World March of Women Kenya
             </h1>
             <p className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-4 sm:mb-6 text-purple-200">
-              Empowering women. Transforming communities. Shaping Kenya's future.
+              feminists across borders, not just sharing stories but bulding strategies to transform the world
             </p>
             <p className="text-lg sm:text-xl md:text-2xl italic font-medium mb-6 sm:mb-8 text-purple-100">
               "When women rise, Kenya rises."
