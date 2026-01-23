@@ -227,7 +227,7 @@ const Contact = () => {
               <p className="text-text/70 text-xs sm:text-sm md:text-base ml-0 sm:ml-13 md:ml-16">Fill out the form below and we'll get back to you as soon as possible.</p>
             </div>
             
-            <form onSubmit={handleSubmit} className="space-y-6" role="form" aria-labelledby="contact-form-title">
+            <form onSubmit={handleSubmit} className="space-y-6" aria-labelledby="contact-form-title">
               <div className="relative">
                 <label htmlFor="name" className="block text-sm font-bold text-primary mb-2 ml-1">
                   Full Name <span className="text-red-500" aria-label="required">*</span>

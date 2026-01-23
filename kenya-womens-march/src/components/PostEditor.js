@@ -15,7 +15,6 @@ if (typeof window !== 'undefined') {
   // Prefer local worker file (most reliable), fallback to jsdelivr CDN
   // Local file should be in public folder: /pdf.worker.min.js
   // To download it, run: node scripts/download-pdf-worker.js
-  const localWorkerPath = '/pdf.worker.min.js';
   const cdnWorkerPath = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${version}/build/pdf.worker.min.js`;
   
   // Use local file if available (check by trying to fetch it)
@@ -84,7 +83,8 @@ const PostEditor = () => {
         date: today
       }));
     }
-  }, [id]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id, isEditing]);
 
   useEffect(() => {
     if (formData.image) {

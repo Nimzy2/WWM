@@ -17,7 +17,7 @@ const DatabaseTest = () => {
     try {
       // Test 1: Basic connection
       addTestResult('Database Connection', 'running', 'Testing connection to Supabase...');
-      const { data, error } = await supabase.from('newsletter_subscribers').select('count').limit(1);
+      const { error } = await supabase.from('newsletter_subscribers').select('count').limit(1);
       
       if (error) {
         addTestResult('Database Connection', 'failed', `Connection failed: ${error.message}`);
@@ -69,7 +69,7 @@ const DatabaseTest = () => {
       // Test 5: Insert test (newsletter)
       addTestResult('Insert Test', 'running', 'Testing insert operation...');
       const testEmail = `test-${Date.now()}@example.com`;
-      const { data: insertData, error: insertError } = await supabase
+      const { error: insertError } = await supabase
         .from('newsletter_subscribers')
         .insert([{ email: testEmail, is_active: true }])
         .select();
@@ -95,6 +95,7 @@ const DatabaseTest = () => {
 
   useEffect(() => {
     testConnection();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const getStatusColor = (status) => {

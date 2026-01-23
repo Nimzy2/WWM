@@ -158,7 +158,7 @@ const FormValidationTest = () => {
       ];
 
       for (const testCase of testCases) {
-        const { first_name, last_name, email, phone, county, involvement_level, interests } = testCase.data;
+        const { first_name, last_name, email, county, involvement_level, interests } = testCase.data;
         
         // Basic validation
         const isValid = first_name.trim() && 

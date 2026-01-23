@@ -1,7 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { fetchBlogs } from '../supabaseHelpers';
-import NewsletterSignup from './NewsletterSignup';
 
 // Compact card for trending sidebar
 const TrendingCard = ({ post, index }) => {

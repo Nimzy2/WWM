@@ -13,7 +13,7 @@ const TestDashboard = () => {
 
     try {
       // Test 1: Database Connection
-      const { data, error } = await supabase.from('newsletter_subscribers').select('count').limit(1);
+      const { error } = await supabase.from('newsletter_subscribers').select('count').limit(1);
       results.database = error ? 'failed' : 'success';
 
       // Test 2: Tables Access

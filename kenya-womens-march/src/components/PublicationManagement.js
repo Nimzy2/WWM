@@ -1,18 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useAdmin } from '../contexts/AdminContext';
 import { fetchAllPublications, deletePublication, publishPublication, unpublishPublication } from '../supabaseHelpers';
 import Notification from './Notification';
 
 const PublicationManagement = () => {
-  const { logout, isWriter } = useAdmin();
-  const navigate = useNavigate();
+  const { logout } = useAdmin();
   const [publications, setPublications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [filter, setFilter] = useState('all'); // all, published, unpublished
   const [search, setSearch] = useState('');
-  const [selectedPublications, setSelectedPublications] = useState([]);
   const [notification, setNotification] = useState({ message: '', type: 'success' });
 
   useEffect(() => {

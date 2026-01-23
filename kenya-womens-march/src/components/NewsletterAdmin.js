@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getAllSubscribers, bulkUpdateSubscribers, deleteSubscribers, getSubscriberStats } from '../newsletterHelpers';
+import { getAllSubscribers, bulkUpdateSubscribers, deleteSubscribers } from '../newsletterHelpers';
 
 const NewsletterAdmin = () => {
   const [subscribers, setSubscribers] = useState([]);
@@ -13,6 +13,7 @@ const NewsletterAdmin = () => {
 
   useEffect(() => {
     fetchSubscribers();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filter, sortBy, sortOrder]);
 
   const fetchSubscribers = async () => {

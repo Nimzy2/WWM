@@ -119,7 +119,6 @@ const BlogPost = () => {
   };
 
   const imageUrl = getImageUrl(post);
-  const readingTime = getReadingTime();
   const excerpt = getExcerpt();
 
   const handleCommentSubmit = async (e) => {
@@ -318,7 +317,6 @@ const BlogPost = () => {
                 {recentPosts.map(rp => {
                   const rpImageUrl = getImageUrl(rp);
                   const rpExcerpt = rp.excerpt ? stripHtmlTags(rp.excerpt) : '';
-                  const rpReadingTime = rpExcerpt ? Math.ceil(rpExcerpt.split(' ').length / 200) : 5;
                   return (
                     <Link 
                       key={rp.id} 

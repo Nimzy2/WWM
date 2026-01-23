@@ -30,7 +30,7 @@ const FormTester = () => {
 
     // Test 1: Supabase Connection
     await runTest('Supabase Connection', async () => {
-      const { data, error } = await supabase.from('site_stats').select('count').limit(1);
+      const { error } = await supabase.from('site_stats').select('count').limit(1);
       if (error) throw new Error(`Database connection failed: ${error.message}`);
       return 'Database connection successful';
     });

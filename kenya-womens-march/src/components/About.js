@@ -141,12 +141,6 @@ const About = () => {
 
   // Carousel state for story images
   const [currentImage, setCurrentImage] = useState(0);
-  const handlePrev = () => {
-    setCurrentImage((prev) => (prev === 0 ? storyImages.length - 1 : prev - 1));
-  };
-  const handleNext = () => {
-    setCurrentImage((prev) => (prev === storyImages.length - 1 ? 0 : prev + 1));
-  };
 
   // Gallery state for bottom image gallery
   const [galleryImage, setGalleryImage] = useState(0);
@@ -205,7 +199,7 @@ const About = () => {
         <div className="absolute inset-0 z-0">
           <img
             src={storyImages[currentImage]}
-            alt={`Story image ${currentImage + 1}`}
+            alt={`Story ${currentImage + 1}`}
             className="w-full h-full object-cover transition-opacity duration-700"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-[#43245A]/95 via-[#43245A]/90 to-[#43245A]/85"></div>

@@ -55,7 +55,8 @@ const PublicationEditor = () => {
         publication_date: today
       }));
     }
-  }, [id]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id, isEditing]);
 
   const loadPublication = async () => {
     try {
