@@ -8,8 +8,9 @@ const fs = require('fs');
 const path = require('path');
 
 const version = '5.4.394';
-const workerUrl = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${version}/build/pdf.worker.min.js`;
-const outputPath = path.join(__dirname, '..', 'public', 'pdf.worker.min.js');
+// Version 5.4.394+ uses .mjs format (ES modules)
+const workerUrl = `https://unpkg.com/pdfjs-dist@${version}/build/pdf.worker.min.mjs`;
+const outputPath = path.join(__dirname, '..', 'public', 'pdf.worker.min.mjs');
 
 console.log(`Downloading PDF.js worker (v${version})...`);
 console.log(`From: ${workerUrl}`);
@@ -28,8 +29,8 @@ https.get(workerUrl, (response) => {
     fileStream.close();
     console.log('✓ Worker file downloaded successfully!');
     console.log(`  Location: ${outputPath}`);
-    console.log('\nTo use the local worker file, update PostEditor.js:');
-    console.log('  pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.js";');
+    console.log('\nThe worker file is now ready! The code is already configured to use it.');
+    console.log('File location: public/pdf.worker.min.mjs');
   });
 }).on('error', (err) => {
   console.error('Error downloading worker file:', err.message);

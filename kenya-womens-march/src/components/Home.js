@@ -106,9 +106,15 @@ const Home = () => {
             </div>
             
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black text-white leading-tight drop-shadow-2xl animate-fade-in-up px-2">
+              <span className="block mb-1 sm:mb-2">Feminists</span>
               <span className="block bg-gradient-to-r from-white via-pink-100 to-white bg-clip-text text-transparent">
-                feminists across borders, not just sharing stories but bulding strategies to transform the world
+                Across Borders,
               </span>
+              <span className="block mt-1 sm:mt-2">Not Just Sharing Stories</span>
+              <span className="block mt-1 sm:mt-2 bg-gradient-to-r from-white via-pink-100 to-white bg-clip-text text-transparent">
+                But Building Strategies
+              </span>
+              <span className="block mt-1 sm:mt-2">To Transform The World</span>
             </h1>
             
             <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-white/95 font-light max-w-3xl mx-auto leading-relaxed animate-fade-in-up animation-delay-200 px-4">

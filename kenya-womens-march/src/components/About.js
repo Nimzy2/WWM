@@ -191,8 +191,16 @@ const About = () => {
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold mb-4 sm:mb-6 leading-tight">
               World March of Women Kenya
             </h1>
-            <p className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-4 sm:mb-6 text-purple-200">
-              feminists across borders, not just sharing stories but bulding strategies to transform the world
+            <p className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-4 sm:mb-6">
+              <span className="block text-purple-200">Feminists</span>
+              <span className="block bg-gradient-to-r from-purple-200 via-pink-200 to-purple-200 bg-clip-text text-transparent">
+                Across Borders,
+              </span>
+              <span className="block text-purple-100">Not Just Sharing Stories</span>
+              <span className="block bg-gradient-to-r from-purple-200 via-pink-200 to-purple-200 bg-clip-text text-transparent">
+                But Building Strategies
+              </span>
+              <span className="block text-purple-200">To Transform The World</span>
             </p>
             <p className="text-lg sm:text-xl md:text-2xl italic font-medium mb-6 sm:mb-8 text-purple-100">
               "When women rise, Kenya rises."

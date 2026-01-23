@@ -26,9 +26,6 @@ const Footer = () => {
             {/* Logo and Description */}
             <div className="col-span-1 sm:col-span-2">
               <h3 className="text-lg md:text-xl font-bold mb-4">World March of Women Kenya</h3>
-              <p className="text-sm md:text-base text-gray-300 mb-4 leading-relaxed">
-                Empowering women's voices, advocating for women's rights, and social justice in Kenya.
-              </p>
               <div className="flex flex-wrap gap-3 md:gap-4">
                 <a 
                   href="https://www.facebook.com/share/1HdcjQTSUX/?mibextid=wwXIfr" 

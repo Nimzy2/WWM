@@ -8,25 +8,23 @@ import mammoth from 'mammoth';
 import * as pdfjsLib from 'pdfjs-dist';
 import Notification from './Notification';
 
-// Configure PDF.js worker with local file preference and CDN fallback
+// Configure PDF.js worker - use .mjs format (ES modules) for version 5.4.394+
 if (typeof window !== 'undefined') {
   const version = pdfjsLib.version || '5.4.394';
   
-  // Prefer local worker file (most reliable), fallback to jsdelivr CDN
-  // Local file should be in public folder: /pdf.worker.min.js
-  // To download it, run: node scripts/download-pdf-worker.js
-  const cdnWorkerPath = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${version}/build/pdf.worker.min.js`;
+  // Version 5.4.394+ uses .mjs format instead of .js
+  // Try local file first (most reliable), then fallback to unpkg CDN
+  // To download the worker file manually:
+  // 1. Visit: https://unpkg.com/pdfjs-dist@5.4.394/build/pdf.worker.min.mjs
+  // 2. Save the file as pdf.worker.min.mjs in the public folder
+  const localWorkerPath = '/pdf.worker.min.mjs';
+  const cdnWorkerPath = `https://unpkg.com/pdfjs-dist@${version}/build/pdf.worker.min.mjs`;
   
-  // Use local file if available (check by trying to fetch it)
-  // For now, use jsdelivr CDN (more reliable than unpkg)
-  // If you add pdf.worker.min.js to public folder, change to: localWorkerPath
-  pdfjsLib.GlobalWorkerOptions.workerSrc = cdnWorkerPath;
+  // Use local file if available, otherwise use CDN
+  // The browser will automatically try the local file first
+  pdfjsLib.GlobalWorkerOptions.workerSrc = localWorkerPath;
   
-  // Alternative fallback sources (uncomment if needed):
-  // const fallbackSources = [
-  //   `https://unpkg.com/pdfjs-dist@${version}/build/pdf.worker.min.js`,
-  //   `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${version}/pdf.worker.min.js`
-  // ];
+  // If local file doesn't exist, the code will try CDN as fallback
 }
 
 const PostEditor = () => {
@@ -237,15 +235,52 @@ const PostEditor = () => {
       
       setUploadStatus('Extracting text from PDF...');
       
-      // Configure worker before processing if not already set
-      if (!pdfjsLib.GlobalWorkerOptions.workerSrc) {
-        const version = pdfjsLib.version || '5.4.394';
-        pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${version}/build/pdf.worker.min.js`;
+      // Ensure worker is configured - use .mjs format for version 5.4.394+
+      const version = pdfjsLib.version || '5.4.394';
+      const localWorkerPath = '/pdf.worker.min.mjs';
+      
+      // Try multiple CDN sources as fallbacks
+      const cdnOptions = [
+        `https://cdn.jsdelivr.net/npm/pdfjs-dist@${version}/build/pdf.worker.min.mjs`,
+        `https://unpkg.com/pdfjs-dist@${version}/build/pdf.worker.min.mjs`
+      ];
+      
+      // Set worker source - try local first, update if using old .js format
+      if (!pdfjsLib.GlobalWorkerOptions.workerSrc || pdfjsLib.GlobalWorkerOptions.workerSrc.includes('.js')) {
+        pdfjsLib.GlobalWorkerOptions.workerSrc = localWorkerPath;
       }
       
-      const pdf = await pdfjsLib.getDocument({ 
-        data: arrayBuffer
-      }).promise;
+      let pdf;
+      let lastError = null;
+      
+      // Try local file first
+      try {
+        pdf = await pdfjsLib.getDocument({ 
+          data: arrayBuffer
+        }).promise;
+      } catch (workerError) {
+        lastError = workerError;
+        // If local worker fails, try CDN fallbacks
+        if (workerError.message && (workerError.message.includes('worker') || workerError.message.includes('Failed to fetch'))) {
+          for (const cdnPath of cdnOptions) {
+            try {
+              pdfjsLib.GlobalWorkerOptions.workerSrc = cdnPath;
+              pdf = await pdfjsLib.getDocument({ 
+                data: arrayBuffer
+              }).promise;
+              break; // Success, exit loop
+            } catch (cdnError) {
+              lastError = cdnError;
+              continue; // Try next CDN
+            }
+          }
+        }
+        
+        // If all attempts failed, throw the last error
+        if (!pdf) {
+          throw lastError;
+        }
+      }
       
       let fullText = '';
       const numPages = pdf.numPages;
@@ -285,8 +320,8 @@ const PostEditor = () => {
       // Provide more helpful error messages
       let errorMessage = 'Failed to read PDF: ';
       
-      if (err.message && err.message.includes('worker')) {
-        errorMessage += 'PDF.js worker failed to load. This may be due to network issues or CDN blocking. Please try again or contact support.';
+      if (err.message && (err.message.includes('worker') || err.message.includes('Failed to fetch') || err.message.includes('dynamically imported'))) {
+        errorMessage += 'PDF.js worker failed to load. To fix this:\n\n1. Download the worker file from: https://unpkg.com/pdfjs-dist@5.4.394/build/pdf.worker.min.mjs\n2. Save it as "pdf.worker.min.mjs" in the public folder\n3. Refresh the page and try again.\n\nNote: Version 5.4.394 uses .mjs format (not .js). See DOWNLOAD_PDF_WORKER.md for detailed instructions.';
       } else if (err.message && err.message.includes('Invalid PDF')) {
         errorMessage += 'The file appears to be corrupted or not a valid PDF.';
       } else if (err.message && err.message.includes('password')) {
