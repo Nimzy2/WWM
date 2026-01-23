@@ -13,18 +13,17 @@ if (typeof window !== 'undefined') {
   const version = pdfjsLib.version || '5.4.394';
   
   // Version 5.4.394+ uses .mjs format instead of .js
-  // Try local file first (most reliable), then fallback to unpkg CDN
+  // Try local file first (most reliable), then fallback to CDN
   // To download the worker file manually:
   // 1. Visit: https://unpkg.com/pdfjs-dist@5.4.394/build/pdf.worker.min.mjs
   // 2. Save the file as pdf.worker.min.mjs in the public folder
   const localWorkerPath = '/pdf.worker.min.mjs';
-  const cdnWorkerPath = `https://unpkg.com/pdfjs-dist@${version}/build/pdf.worker.min.mjs`;
   
   // Use local file if available, otherwise use CDN
   // The browser will automatically try the local file first
   pdfjsLib.GlobalWorkerOptions.workerSrc = localWorkerPath;
   
-  // If local file doesn't exist, the code will try CDN as fallback
+  // If local file doesn't exist, the code will try CDN as fallback in handlePDFUpload
 }
 
 const PostEditor = () => {
