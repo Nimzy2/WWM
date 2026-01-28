@@ -279,20 +279,201 @@ const PostEditor = () => {
         }
       }
       
-      let fullText = '';
+      let fullContent = '';
+      let allExtractedText = ''; // Store extracted text for title extraction
+      let hasImages = false; // Track if we rendered any page images
       const numPages = pdf.numPages;
       
-      // Extract text from all pages
+      // Extract text and images from all pages
       for (let pageNum = 1; pageNum <= numPages; pageNum++) {
-        setUploadStatus(`Processing page ${pageNum} of ${numPages}...`);
+        setUploadStatus(`Processing page ${pageNum} of ${numPages} (rendering page)...`);
         const page = await pdf.getPage(pageNum);
         const textContent = await page.getTextContent();
-        const pageText = textContent.items.map(item => item.str).join(' ');
-        fullText += pageText + '\n\n';
+        
+        // Render full PDF page as an image so the blog matches the original PDF layout
+        // (This is the most reliable way to preserve images, fonts, spacing, and design.)
+        let pageImageDataUrl = '';
+        try {
+          const viewport = page.getViewport({ scale: 2.0 });
+          const canvas = document.createElement('canvas');
+          const context = canvas.getContext('2d');
+          canvas.width = viewport.width;
+          canvas.height = viewport.height;
+
+          await page.render({
+            canvasContext: context,
+            viewport
+          }).promise;
+
+          // JPEG is much smaller than PNG; good tradeoff for page screenshots
+          pageImageDataUrl = canvas.toDataURL('image/jpeg', 0.9);
+          if (pageImageDataUrl) {
+            hasImages = true;
+          }
+        } catch (renderErr) {
+          console.warn('Could not render PDF page image:', renderErr);
+        }
+        
+        // Smart text extraction that preserves ligatures
+        // Uses positioning information to determine proper spacing
+        let pageText = '';
+        const items = textContent.items;
+        
+        // Store text items with their positions for image placement
+        const textItems = [];
+        
+        if (items.length > 0) {
+          for (let i = 0; i < items.length; i++) {
+            const item = items[i];
+            const currentText = item.str || '';
+            
+            if (!currentText) {
+              continue; // Skip empty items
+            }
+            
+            const transform = item.transform || [];
+            const x = transform[4] !== undefined ? transform[4] : 0;
+            const y = transform[5] !== undefined ? transform[5] : 0;
+            
+            textItems.push({
+              text: currentText,
+              x,
+              y,
+              width: item.width || 0,
+              height: item.height || 0
+            });
+            
+            if (i === 0) {
+              // First item, just add it
+              pageText += currentText;
+            } else {
+              const prevItem = items[i - 1];
+              
+              // Get positioning information
+              const prevTransform = prevItem.transform || [];
+              const currentTransform = item.transform || [];
+              
+              // Extract x, y positions from transform matrix [a, b, c, d, e, f]
+              // where e = x translation, f = y translation
+              const prevX = prevTransform[4] !== undefined ? prevTransform[4] : 0;
+              const prevY = prevTransform[5] !== undefined ? prevTransform[5] : 0;
+              const prevWidth = prevItem.width || 0;
+              const currentX = currentTransform[4] !== undefined ? currentTransform[4] : 0;
+              const currentY = currentTransform[5] !== undefined ? currentTransform[5] : 0;
+              
+              // Calculate if items are on the same line (similar Y position)
+              // Use a tolerance based on font size if available, otherwise use 5px
+              const yTolerance = Math.max(5, (prevItem.height || 12) * 0.3);
+              const sameLine = Math.abs(prevY - currentY) < yTolerance;
+              
+              // Calculate horizontal distance
+              const horizontalGap = currentX - (prevX + prevWidth);
+              
+              // Determine spacing based on positioning
+              if (!sameLine) {
+                // Different line - add newline
+                pageText += '\n' + currentText;
+              } else {
+                // Same line - determine spacing based on gap
+                const prevText = prevItem.str || '';
+                const avgCharWidth = prevText.length > 0 ? (prevWidth / prevText.length) : prevWidth;
+                
+                // If gap is very small (< 0.3 * char width), likely a ligature - join without space
+                // If gap is small (0.3-1.5 * char width), normal character spacing - join without space
+                // If gap is medium (1.5-3 * char width), word boundary - add space
+                // If gap is large (> 3 * char width), intentional spacing - add space
+                
+                if (horizontalGap < 0) {
+                  // Overlapping or negative gap - definitely join without space (ligature case)
+                  pageText += currentText;
+                } else if (horizontalGap < (avgCharWidth * 0.3)) {
+                  // Very close together - likely ligature or connected characters
+                  pageText += currentText;
+                } else if (horizontalGap < (avgCharWidth * 1.5)) {
+                  // Normal character spacing - join without space
+                  pageText += currentText;
+                } else {
+                  // Word boundary or intentional spacing - add space
+                  pageText += ' ' + currentText;
+                }
+              }
+            }
+          }
+        }
+        
+        // Post-process text to fix any remaining ligature issues before converting to HTML
+        // Fix common ligature patterns where spaces were incorrectly inserted
+        pageText = pageText
+          // Fix 'fi' ligature (f i -> fi)
+          .replace(/\bf\s+i\b/g, 'fi')
+          .replace(/\bf\s+i([a-z])/g, 'fi$1')
+          // Fix 'fl' ligature (f l -> fl)
+          .replace(/\bf\s+l\b/g, 'fl')
+          .replace(/\bf\s+l([a-z])/g, 'fl$1')
+          // Fix 'ff' ligature (f f -> ff)
+          .replace(/\bf\s+f\b/g, 'ff')
+          .replace(/\bf\s+f([a-z])/g, 'ff$1')
+          // Fix 'ffi' ligature (f f i -> ffi)
+          .replace(/\bf\s+f\s+i\b/g, 'ffi')
+          .replace(/\bf\s+f\s+i([a-z])/g, 'ffi$1')
+          // Fix 'ffl' ligature (f f l -> ffl)
+          .replace(/\bf\s+f\s+l\b/g, 'ffl')
+          .replace(/\bf\s+f\s+l([a-z])/g, 'ffl$1')
+          // Fix common word patterns that might have ligature issues
+          .replace(/\bdif\s+fi\s+cult/g, 'difficult')
+          .replace(/\bdif\s+fi\s+culty/g, 'difficulty')
+          .replace(/\bdif\s+fi\s+culties/g, 'difficulties')
+          .replace(/\baf\s+fi\s+rm/g, 'affirm')
+          .replace(/\baf\s+fi\s+rmation/g, 'affirmation')
+          .replace(/\baf\s+fi\s+rmative/g, 'affirmative')
+          .replace(/\bre\s+fl\s+ect/g, 'reflect')
+          .replace(/\bre\s+fl\s+ection/g, 'reflection')
+          .replace(/\bre\s+fl\s+ections/g, 'reflections')
+          .replace(/\bdigni\s+fi\s+ed/g, 'dignified')
+          .replace(/\bdigni\s+fi\s+es/g, 'dignifies')
+          .replace(/\bfi\s+rm/g, 'firm')
+          .replace(/\bfi\s+rmly/g, 'firmly')
+          .replace(/\bfi\s+rmness/g, 'firmness');
+        
+        // Build HTML content to match the PDF visually (page image),
+        // and keep extracted text hidden to avoid visible duplication.
+        let pageContent = '';
+
+        if (pageImageDataUrl) {
+          pageContent += `<div class="pdf-page-image" style="margin: 0 auto 2rem; text-align: center; background: #f5f5f5; padding: 1rem; border-radius: 8px;">
+            <img src="${pageImageDataUrl}" alt="PDF page ${pageNum}" style="max-width: 100%; height: auto; border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);" />
+          </div>\n\n`;
+        }
+
+        // Keep extracted text hidden so:
+        // - We can still derive titles / metadata
+        // - We avoid the visible "duplicate page" effect
+        // - We can later add a “Show text” toggle if desired
+        if (pageText.trim()) {
+          const escapeHtml = (text) => {
+            if (typeof text !== 'string') return '';
+            return text
+              .replace(/&/g, '&amp;')
+              .replace(/</g, '&lt;')
+              .replace(/>/g, '&gt;')
+              .replace(/"/g, '&quot;')
+              .replace(/'/g, '&#039;');
+          };
+          pageContent += `<div class="pdf-extracted-text" style="display:none;">${escapeHtml(pageText)}</div>\n\n`;
+        }
+        
+        fullContent += pageContent;
+        // Also accumulate extracted text for title extraction
+        if (pageText.trim()) {
+          allExtractedText += pageText + '\n\n';
+        }
       }
       
-      if (!fullText.trim()) {
-        throw new Error('No text could be extracted from the PDF. The PDF might be image-based or encrypted.');
+      // Use fullContent as the final HTML content (PDF pages rendered as images)
+      let fullText = fullContent;
+      
+      if (!fullText.trim() && !hasImages) {
+        throw new Error('No content could be extracted from the PDF. The PDF might be corrupted or encrypted.');
       }
       
       setFormData(prev => ({
@@ -300,13 +481,13 @@ const PostEditor = () => {
         content: fullText.trim()
       }));
       
-      // Try to extract title from first line if title is empty
-      if (!formData.title && fullText) {
-        const firstLine = fullText.split('\n')[0].trim();
-        if (firstLine && firstLine.length < 100) {
+      // Try to extract title from extracted text (not HTML) if title is empty
+      if (!formData.title && allExtractedText.trim()) {
+        const firstLine = allExtractedText.split('\n').find(line => line.trim().length > 0);
+        if (firstLine && firstLine.trim().length < 100) {
           setFormData(prev => ({
             ...prev,
-            title: firstLine
+            title: firstLine.trim()
           }));
         }
       }
