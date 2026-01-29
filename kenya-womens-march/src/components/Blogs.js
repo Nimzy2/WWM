@@ -18,30 +18,20 @@ const TrendingCard = ({ post, index }) => {
 
   const imageUrl = getImageUrl();
 
-  const stripHtmlTags = (html) => {
-    if (!html) return '';
-    const tmp = document.createElement('DIV');
-    tmp.innerHTML = html;
-    return tmp.textContent || tmp.innerText || '';
-  };
-
-  const excerpt = post.excerpt ? stripHtmlTags(post.excerpt) : '';
-  const readingTime = excerpt ? Math.ceil(excerpt.split(' ').length / 200) : 5;
-
   return (
     <Link to={`/blog/${post.id}`} className="flex gap-3 mb-6 group">
-      <div className="w-24 h-20 flex-shrink-0 rounded-lg overflow-hidden bg-gradient-to-br from-purple-100 to-pink-100">
-        {imageUrl && !imageError ? (
-          <img 
-            src={imageUrl} 
-            alt={post.title || 'Blog post'} 
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+      <div className="w-24 h-20 flex-shrink-0 rounded-lg overflow-hidden bg-gradient-to-br from-purple-100 to-pink-100 relative">
+        <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-purple-100 to-pink-100" aria-hidden="true">
+          <span className="text-2xl text-primary/80" role="img" aria-label="Blog post">📖</span>
+        </div>
+        {imageUrl && !imageError && (
+          <img
+            src={imageUrl}
+            alt={post.title || 'Blog post'}
+            className="relative z-10 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
             onError={() => setImageError(true)}
+            loading="lazy"
           />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center">
-            <div className="text-2xl">📖</div>
-          </div>
         )}
       </div>
       <div className="flex-1 min-w-0">
@@ -58,8 +48,6 @@ const TrendingCard = ({ post, index }) => {
               })}
             </span>
           )}
-          <span className="text-purple-200 text-xs">-</span>
-          <span className="text-purple-200 text-xs">{readingTime} min</span>
           {post.category && (
             <span className="bg-purple-400/30 text-purple-100 px-2 py-0.5 rounded text-xs">
               {post.category}
@@ -308,15 +296,13 @@ const Blogs = () => {
   const featured = shouldShowFeatured ? sortedBlogs[0] : null;
   const trendingPosts = shouldShowFeatured ? sortedBlogs.slice(1, 4) : []; // Next 3 posts for trending sidebar
 
-  // Paginated posts (excluding featured and trending posts only if we're showing them)
+  // Paginated posts: show all posts except the single featured one (trending posts also appear in the grid)
   const filteredPosts = useMemo(() => {
     if (!shouldShowFeatured) {
-      // If we have 4 or fewer posts, show them all in the grid
       return sortedBlogs;
     }
-    // Otherwise, exclude the first 4 (featured + 3 trending)
-    const excludedIds = sortedBlogs.slice(0, 4).map(p => p.id).filter(Boolean);
-    return sortedBlogs.filter(post => !excludedIds.includes(post.id));
+    // Exclude only the featured post from the grid; trending posts (2–4) appear in both sidebar and grid
+    return sortedBlogs.slice(1);
   }, [sortedBlogs, shouldShowFeatured]);
 
   // Pagination
@@ -339,14 +325,6 @@ const Blogs = () => {
     const tmp = document.createElement('DIV');
     tmp.innerHTML = html;
     return tmp.textContent || tmp.innerText || '';
-  };
-
-  const getReadingTime = (post) => {
-    const excerpt = post.excerpt ? stripHtmlTags(post.excerpt) : '';
-    const content = post.content ? stripHtmlTags(post.content) : '';
-    const text = excerpt || content;
-    if (!text) return 5;
-    return Math.ceil(text.split(' ').length / 200);
   };
 
   try {
@@ -435,7 +413,7 @@ const Blogs = () => {
                             month: 'long', 
                             day: 'numeric',
                             year: 'numeric'
-                          })} - {getReadingTime(featured)} min
+                          })}
                         </span>
                       )}
                     </div>
