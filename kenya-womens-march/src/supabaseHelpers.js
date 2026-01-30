@@ -654,3 +654,327 @@ export async function getPublicationStats() {
     recent
   };
 }
+
+// GALLERY IMAGES CRUD
+export async function fetchGalleryImages() {
+  try {
+    // List all images from the gallery bucket
+    const { data, error: listError } = await supabase.storage
+      .from('gallery')
+      .list('', {
+        limit: 1000,
+        offset: 0,
+        sortBy: { column: 'created_at', order: 'desc' }
+      });
+
+    if (listError) {
+      // If bucket doesn't exist, return empty array with helpful message
+      if (listError.message?.includes('not found') || 
+          listError.message?.includes('Bucket') || 
+          listError.statusCode === 404 ||
+          listError.message?.includes('does not exist')) {
+        console.warn('Gallery bucket not found. Please create it in Supabase Storage.');
+        // Return empty array instead of throwing to show "No Images" message
+        return [];
+      }
+      // For other errors, throw to show error message
+      throw new Error(listError.message || 'Failed to fetch gallery images');
+    }
+
+    // If no data, return empty array
+    if (!data || data.length === 0) {
+      return [];
+    }
+
+    // Filter for image files only
+    const imageFiles = data.filter(file => {
+      const extension = file.name.split('.').pop().toLowerCase();
+      return ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'].includes(extension);
+    });
+
+    // Fetch metadata from database (captions, etc.)
+    let metadataMap = {};
+    try {
+      const { data: metadata, error: metadataError } = await supabase
+        .from('gallery_images')
+        .select('*');
+      
+      if (!metadataError && metadata) {
+        metadata.forEach(item => {
+          metadataMap[item.file_name] = item;
+        });
+      }
+    } catch (metadataErr) {
+      // If table doesn't exist yet, continue without metadata
+      console.warn('Gallery metadata table not found. Captions will not be available until table is created.');
+    }
+
+    // Get public URLs for all images and merge with metadata
+    const imageUrls = imageFiles.map(file => {
+      const { data: urlData } = supabase.storage
+        .from('gallery')
+        .getPublicUrl(file.name);
+
+      const metadata = metadataMap[file.name] || {};
+
+      return {
+        id: metadata.id || file.id || file.name,
+        name: file.name,
+        url: urlData.publicUrl,
+        caption: metadata.caption || null,
+        alt_text: metadata.alt_text || file.name.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' '),
+        category: metadata.category || null,
+        tags: metadata.tags || [],
+        display_order: metadata.display_order || 0,
+        is_featured: metadata.is_featured || false,
+        created_at: file.created_at,
+        updated_at: file.updated_at
+      };
+    });
+
+    // Sort by display_order, then by created_at
+    imageUrls.sort((a, b) => {
+      if (a.display_order !== b.display_order) {
+        return a.display_order - b.display_order;
+      }
+      return new Date(b.created_at) - new Date(a.created_at);
+    });
+
+    return imageUrls;
+  } catch (error) {
+    console.error('Error fetching gallery images:', error);
+    // Re-throw with more context
+    throw new Error(error.message || 'Failed to fetch gallery images from Supabase Storage');
+  }
+}
+
+export async function uploadGalleryImages(files, onProgress = null) {
+  try {
+    // Check if user is authenticated
+    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+    if (sessionError || !session) {
+      throw new Error('You must be logged in to upload images. Please log in and try again.');
+    }
+
+    const results = [];
+    const fileArray = Array.isArray(files) ? files : [files];
+
+    for (let i = 0; i < fileArray.length; i++) {
+      const file = fileArray[i];
+
+      // Validate file type
+      const fileExtension = file.name.split('.').pop().toLowerCase();
+      const allowedTypes = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'];
+      
+      if (!allowedTypes.includes(fileExtension)) {
+        results.push({
+          fileName: file.name,
+          success: false,
+          error: 'Invalid file type. Only image files are allowed.'
+        });
+        if (onProgress) onProgress(i + 1, fileArray.length);
+        continue;
+      }
+
+      // Validate file size (max 10MB per image)
+      const maxSize = 10 * 1024 * 1024; // 10MB in bytes
+      if (file.size > maxSize) {
+        results.push({
+          fileName: file.name,
+          success: false,
+          error: 'File size exceeds 10MB limit.'
+        });
+        if (onProgress) onProgress(i + 1, fileArray.length);
+        continue;
+      }
+
+      // Create a unique filename
+      const timestamp = Date.now();
+      const sanitizedFileName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
+      const filePath = `${timestamp}-${sanitizedFileName}`;
+
+      try {
+        // Upload file to Supabase Storage
+        const { data, error } = await supabase.storage
+          .from('gallery')
+          .upload(filePath, file, {
+            cacheControl: '3600',
+            upsert: false
+          });
+
+        if (error) {
+          console.error(`Upload error for ${file.name}:`, error);
+          
+          // Provide specific error messages
+          if (error.message?.includes('Bucket not found') || error.message?.includes('not found') || error.statusCode === 404) {
+            results.push({
+              fileName: file.name,
+              success: false,
+              error: 'Gallery bucket not found. Please create it in Supabase Storage.'
+            });
+          } else if (error.message?.includes('new row violates row-level security') || error.message?.includes('permission denied') || error.statusCode === 403) {
+            results.push({
+              fileName: file.name,
+              success: false,
+              error: 'Permission denied. Please check your Supabase Storage policies.'
+            });
+          } else if (error.message?.includes('duplicate') || error.statusCode === 409) {
+            results.push({
+              fileName: file.name,
+              success: false,
+              error: 'A file with this name already exists.'
+            });
+          } else {
+            results.push({
+              fileName: file.name,
+              success: false,
+              error: error.message || 'Upload failed'
+            });
+          }
+        } else {
+          // Create database entry for the image
+          try {
+            const { error: dbError } = await supabase
+              .from('gallery_images')
+              .insert({
+                file_name: data.path, // Use the full path as stored in storage
+                file_path: data.path,
+                alt_text: file.name.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ')
+              });
+
+            if (dbError && !dbError.message?.includes('duplicate')) {
+              console.warn(`Failed to create database entry for ${file.name}:`, dbError);
+              // Continue anyway - image is uploaded, just no metadata
+            }
+          } catch (dbErr) {
+            // If table doesn't exist yet, continue without metadata
+            console.warn('Gallery metadata table not found. Image uploaded but no metadata created.');
+          }
+
+          results.push({
+            fileName: file.name,
+            success: true,
+            path: data.path
+          });
+        }
+      } catch (uploadError) {
+        console.error(`Upload error for ${file.name}:`, uploadError);
+        results.push({
+          fileName: file.name,
+          success: false,
+          error: uploadError.message || 'Upload failed'
+        });
+      }
+
+      if (onProgress) onProgress(i + 1, fileArray.length);
+    }
+
+    return results;
+  } catch (err) {
+    console.error('Gallery upload error:', err);
+    throw new Error(err.message || 'Failed to upload images. Please try again or check your Supabase Storage configuration.');
+  }
+}
+
+export async function deleteGalleryImage(fileName) {
+  try {
+    // Check if user is authenticated
+    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+    if (sessionError || !session) {
+      throw new Error('You must be logged in to delete images.');
+    }
+
+    // Delete from storage
+    const { error } = await supabase.storage
+      .from('gallery')
+      .remove([fileName]);
+
+    if (error) {
+      throw error;
+    }
+
+    // Delete from database
+    try {
+      await supabase
+        .from('gallery_images')
+        .delete()
+        .eq('file_name', fileName);
+    } catch (dbErr) {
+      // If table doesn't exist, continue anyway
+      console.warn('Could not delete from metadata table:', dbErr);
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error('Error deleting gallery image:', error);
+    throw error;
+  }
+}
+
+// Update gallery image metadata (caption, alt_text, etc.)
+export async function updateGalleryImageMetadata(fileName, metadata) {
+  try {
+    // Check if user is authenticated
+    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+    if (sessionError || !session) {
+      throw new Error('You must be logged in to update image metadata.');
+    }
+
+    const row = {
+      file_name: fileName,
+      file_path: fileName,
+      caption: metadata.caption || null,
+      alt_text: metadata.alt_text || null,
+      category: metadata.category || null,
+      tags: metadata.tags || [],
+      display_order: metadata.display_order || 0,
+      is_featured: metadata.is_featured || false
+    };
+
+    // Upsert: insert or update on conflict (file_name is UNIQUE)
+    const { data, error } = await supabase
+      .from('gallery_images')
+      .upsert(row, {
+        onConflict: 'file_name',
+        ignoreDuplicates: false
+      })
+      .select()
+      .single();
+
+    if (error) {
+      // Give a clearer message for common issues
+      if (error.message?.includes('does not exist') || error.code === '42P01') {
+        throw new Error('Gallery captions table not set up. Run the SQL in supabase_gallery_images_table.sql in your Supabase SQL Editor.');
+      }
+      if (error.message?.includes('permission') || error.message?.includes('policy') || error.code === '42501') {
+        throw new Error('Permission denied. Make sure you are logged in and the gallery_images table has policies for authenticated users.');
+      }
+      throw new Error(error.message || 'Failed to save caption.');
+    }
+
+    return data;
+  } catch (error) {
+    console.error('Error updating gallery image metadata:', error);
+    throw error;
+  }
+}
+
+// Get gallery image metadata
+export async function getGalleryImageMetadata(fileName) {
+  try {
+    const { data, error } = await supabase
+      .from('gallery_images')
+      .select('*')
+      .eq('file_name', fileName)
+      .single();
+
+    if (error && error.code !== 'PGRST116') {
+      throw error;
+    }
+
+    return data || null;
+  } catch (error) {
+    console.error('Error fetching gallery image metadata:', error);
+    throw error;
+  }
+}

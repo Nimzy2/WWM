@@ -88,9 +88,8 @@
     }
     </script>
     
-    <!-- Security Headers -->
+    <!-- Security Headers (X-Frame-Options must be set via HTTP header on server, not meta) -->
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
-    <meta http-equiv="X-Frame-Options" content="DENY">
     <meta http-equiv="X-XSS-Protection" content="1; mode=block">
     
     <!-- Performance and Accessibility -->

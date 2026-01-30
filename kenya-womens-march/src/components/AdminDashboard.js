@@ -167,6 +167,22 @@ const AdminDashboard = () => {
           {!isWriter && (
             <>
               <Link
+                to="/admin/gallery"
+                className="bg-white text-primary border-2 border-primary px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold hover:bg-primary hover:text-white transition-colors duration-200 text-sm sm:text-base"
+              >
+                Upload Images
+              </Link>
+              <Link
+                to="/admin/gallery/manage"
+                className="bg-white text-primary border-2 border-primary px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold hover:bg-primary hover:text-white transition-colors duration-200 text-sm sm:text-base"
+              >
+                Manage Captions
+              </Link>
+            </>
+          )}
+          {!isWriter && (
+            <>
+              <Link
                 to="/admin/join-requests"
                 className="bg-white text-primary border-2 border-primary px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold hover:bg-primary hover:text-white transition-colors duration-200 text-sm sm:text-base"
               >

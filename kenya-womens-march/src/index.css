@@ -153,4 +153,84 @@ html {
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--accent);
+}
+
+/* Gallery Hero — editorial, high-end */
+.gallery-hero-grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.12;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+}
+
+.gallery-hero-cta {
+  position: relative;
+  transition: color 0.4s ease, box-shadow 0.4s ease;
+}
+.gallery-hero-cta::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -2px;
+  width: 0;
+  height: 1px;
+  background: currentColor;
+  transition: width 0.4s ease, left 0.4s ease;
+}
+.gallery-hero-cta:hover::after {
+  width: 100%;
+  left: 0;
+}
+.gallery-hero-cta:hover {
+  box-shadow: 0 0 24px rgba(255, 255, 255, 0.25);
+}
+
+/* Gallery grid — editorial, curated */
+.gallery-card {
+  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.5s ease;
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 4px 24px -4px rgba(67, 36, 90, 0.08), 0 8px 16px -8px rgba(0, 0, 0, 0.06);
+}
+.gallery-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 24px 48px -12px rgba(67, 36, 90, 0.15), 0 12px 24px -8px rgba(0, 0, 0, 0.08);
+}
+.gallery-card img {
+  transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.gallery-card:hover img {
+  transform: scale(1.04);
+}
+/* Minimal pill filter bar */
+.gallery-pill {
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  transition: color 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+}
+.gallery-pill:hover {
+  box-shadow: 0 2px 8px rgba(67, 36, 90, 0.12);
+}
+.gallery-pill-active {
+  box-shadow: 0 2px 12px rgba(67, 36, 90, 0.2);
+}
+/* Staggered reveal */
+@keyframes gallery-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.gallery-reveal {
+  opacity: 0;
+  animation: gallery-reveal 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+/* Bridge from hero to gallery */
+.gallery-bridge {
+  background: linear-gradient(to bottom, rgba(26, 10, 36, 0.03) 0%, transparent 30%, rgba(255, 255, 255, 1) 100%);
 } 

@@ -28,6 +28,9 @@ import ContactMessagesAdmin from './components/ContactMessagesAdmin';
 import Publications from './components/Publications';
 import PublicationManagement from './components/PublicationManagement';
 import PublicationEditor from './components/PublicationEditor';
+import Gallery from './components/Gallery';
+import GalleryAdmin from './components/GalleryAdmin';
+import GalleryManagement from './components/GalleryManagement';
 
 function App() {
   return (
@@ -59,6 +62,7 @@ function App() {
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/join" element={<Join />} />
                 <Route path="/publications" element={<Publications />} />
+                <Route path="/gallery" element={<Gallery />} />
                 <Route path="/newsletter-admin" element={<NewsletterAdmin />} />
                 <Route path="/unsubscribe" element={<NewsletterUnsubscribe />} />
                 <Route path="/test" element={<FormTester />} />
@@ -145,6 +149,22 @@ function App() {
                   element={
                     <ProtectedRoute allowedRoles={['admin', 'writer']}>
                       <PublicationEditor />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin/gallery"
+                  element={
+                    <ProtectedRoute allowedRoles={['admin']}>
+                      <GalleryAdmin />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin/gallery/manage"
+                  element={
+                    <ProtectedRoute allowedRoles={['admin']}>
+                      <GalleryManagement />
                     </ProtectedRoute>
                   }
                 />
