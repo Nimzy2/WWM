@@ -21,12 +21,6 @@ const GalleryManagement = () => {
   const [notification, setNotification] = useState({ message: '', type: 'success' });
   const [saving, setSaving] = useState(false);
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      loadImages();
-    }
-  }, [isAuthenticated]);
-
   const loadImages = async () => {
     try {
       setLoading(true);
@@ -39,6 +33,13 @@ const GalleryManagement = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      loadImages();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- loadImages is stable, only run when isAuthenticated changes
+  }, [isAuthenticated]);
 
   const showNotification = (message, type = 'success') => {
     setNotification({ message, type });

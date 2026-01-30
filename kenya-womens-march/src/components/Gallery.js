@@ -11,7 +11,7 @@ const Gallery = () => {
   const [error, setError] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState('all');
-  const [search, setSearch] = useState('');
+  const [search] = useState('');
   const [page, setPage] = useState(1);
   const [viewMode, setViewMode] = useState('grid'); // first toggle (grid) shows on first load
   const galleryContentRef = useRef(null);
