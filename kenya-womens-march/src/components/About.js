@@ -305,6 +305,108 @@ const About = () => {
         </div>
       </section>
 
+      {/* Meet Our Team Section */}
+      <section className="py-12 sm:py-16 md:py-20 lg:py-28 bg-gradient-to-br from-gray-50 via-white to-purple-50" aria-labelledby="team-heading">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <header className="text-center mb-12 sm:mb-16 md:mb-20">
+            <h2 id="team-heading" className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-gray-900 text-center tracking-tight">
+              Meet Our Team
+            </h2>
+            <div className="w-12 h-1 sm:w-16 sm:h-0.5 bg-[#43245A] mx-auto mt-4 rounded-full opacity-90" aria-hidden="true" />
+          </header>
+
+          {/* Subsection: Working Team */}
+          <div className="mb-16 sm:mb-20 md:mb-24">
+            <h3 className="text-xs sm:text-sm font-semibold text-[#B6A8C1] uppercase tracking-[0.25em] text-center mb-8 sm:mb-10 md:mb-12">
+              Working Team
+            </h3>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6 md:gap-8">
+              {[
+                'Esther Mwakali',
+                'Millicent Awino',
+                'Michelle Kabucho',
+                'Terry Ochola',
+                'Sophie Ogutu',
+                'Lydia Dola',
+                'Beatrice Kamau',
+                'Regina Mutiru',
+                'Comfort Achieng',
+                'Anne Wanjiru'
+              ].map((name, idx) => (
+                <div
+                  key={name}
+                  className="group relative bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-5 md:p-6 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border border-gray-100 hover:border-[#B6A8C1]/30"
+                  style={{ animationDelay: `${idx * 0.05}s` }}
+                >
+                  {/* Profile Photo */}
+                  <div className="relative mb-4 sm:mb-5">
+                    <div className="relative w-full aspect-square rounded-full sm:rounded-2xl overflow-hidden bg-gradient-to-br from-[#B6A8C1]/20 to-[#43245A]/10 group-hover:from-[#B6A8C1]/30 group-hover:to-[#43245A]/20 transition-all duration-500">
+                      <img
+                        src={`/team/${name === 'Anne Wanjiru' ? 'anne-wanjiku' : name.toLowerCase().replace(/\s+/g, '-')}.jpeg`}
+                        alt={name}
+                        className={`w-full h-full object-cover transition-all duration-500 group-hover:scale-105 ${name === 'Millicent Awino' ? 'object-top' : ''}`}
+                        onError={(e) => {
+                          e.target.src = `data:image/svg+xml,%3Csvg width='400' height='400' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100%25' height='100%25' fill='%23B6A8C1'/%3E%3Ctext x='50%25' y='50%25' font-family='Arial' font-size='24' fill='%2343245A' text-anchor='middle' dy='.3em'%3E${name.split(' ').map(n => n[0]).join('')}%3C/text%3E%3C/svg%3E`;
+                        }}
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/0 to-transparent group-hover:from-black/10 transition-all duration-500" />
+                    </div>
+                    <div className="absolute inset-0 rounded-full sm:rounded-2xl bg-[#B6A8C1]/0 group-hover:bg-[#B6A8C1]/10 blur-xl transition-all duration-500 -z-10" />
+                  </div>
+                  <div className="text-center">
+                    <p className="text-sm sm:text-base md:text-lg font-semibold text-gray-900 group-hover:text-[#43245A] transition-colors duration-300 leading-tight">
+                      {name}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="w-full border-t border-gray-200 mb-16 sm:mb-20 md:mb-24" />
+
+          {/* Subsection: Our Secretariat */}
+          <div>
+            <h3 className="text-xs sm:text-sm font-semibold text-[#B6A8C1] uppercase tracking-[0.25em] text-center mb-8 sm:mb-10 md:mb-12">
+              Our Secretariat
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 md:gap-10 max-w-4xl mx-auto">
+              {[
+                'Michelle Kabucho',
+                'Anne Wanjiku',
+                'Sophie Ogutu'
+              ].map((name, idx) => (
+                <div
+                  key={name}
+                  className="group relative bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-6 md:p-8 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border border-gray-100 hover:border-[#B6A8C1]/30"
+                  style={{ animationDelay: `${idx * 0.1}s` }}
+                >
+                  <div className="relative mb-5 sm:mb-6">
+                    <div className="relative w-full aspect-square rounded-full sm:rounded-2xl overflow-hidden bg-gradient-to-br from-[#B6A8C1]/20 to-[#43245A]/10 group-hover:from-[#B6A8C1]/30 group-hover:to-[#43245A]/20 transition-all duration-500">
+                      <img
+                        src={`/team/${name.toLowerCase().replace(/\s+/g, '-')}.jpeg`}
+                        alt={name}
+                        className="w-full h-full object-cover transition-all duration-500 group-hover:scale-105"
+                        onError={(e) => {
+                          e.target.src = `data:image/svg+xml,%3Csvg width='400' height='400' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100%25' height='100%25' fill='%23B6A8C1'/%3E%3Ctext x='50%25' y='50%25' font-family='Arial' font-size='24' fill='%2343245A' text-anchor='middle' dy='.3em'%3E${name.split(' ').map(n => n[0]).join('')}%3C/text%3E%3C/svg%3E`;
+                        }}
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/0 to-transparent group-hover:from-black/10 transition-all duration-500" />
+                    </div>
+                    <div className="absolute inset-0 rounded-full sm:rounded-2xl bg-[#B6A8C1]/0 group-hover:bg-[#B6A8C1]/10 blur-xl transition-all duration-500 -z-10" />
+                  </div>
+                  <div className="text-center">
+                    <p className="text-base sm:text-lg md:text-xl font-semibold text-gray-900 group-hover:text-[#43245A] transition-colors duration-300 leading-tight">
+                      {name}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Our Values - Modern Grid */}
       <section className="py-12 sm:py-16 md:py-20 lg:py-28 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
