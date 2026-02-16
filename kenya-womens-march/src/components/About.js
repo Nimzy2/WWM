@@ -281,7 +281,7 @@ const About = () => {
               
               <div className="space-y-4 sm:space-y-5 text-gray-700 text-base sm:text-lg leading-relaxed">
                 <p>
-                  <span className="font-bold text-[#43245A]">Since 2007</span>, WMW-Kenya has been a home for women who refuse to accept injustice as fate. Born under the banner of the <span className="font-semibold text-[#B6A8C1]">Feminist Organizing School Africa</span>, our movement brings together Kenyan women from across the country–urban and rural, young and old, queer and cisgender, workers and mothers into a shared commitment: to organize against patriarchy, capitalism, and all forms of oppression.
+                  <span className="font-bold text-[#43245A]">Since 2007</span>, World March of Women Kenya has been a home for women who refuse to accept injustice as fate. Born under the banner of the <span className="font-semibold text-[#B6A8C1]">Feminist Organizing School Africa</span>, our movement brings together Kenyan women from across the country–urban and rural, young and old, queer and cisgender, workers and mothers into a shared commitment: to organize against patriarchy, capitalism, and all forms of oppression.
                 </p>
                 <p>
                   We believe that <span className="font-semibold text-[#43245A]">women's liberation is inseparable from the liberation of all oppressed people</span>. Our work spans from grassroots community organizing to national policy advocacy, always centering the voices and leadership of those most affected by injustice.
@@ -322,16 +322,16 @@ const About = () => {
             </h3>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6 md:gap-8">
               {[
+                'Sophie Ogutu',
+                'Beatrice Kamau',
+                'Anne Wanjiru',
                 'Esther Mwakali',
                 'Millicent Awino',
                 'Michelle Kabucho',
                 'Terry Ochola',
-                'Sophie Ogutu',
                 'Lydia Dola',
-                'Beatrice Kamau',
                 'Regina Mutiru',
-                'Comfort Achieng',
-                'Anne Wanjiru'
+                'Comfort Achieng'
               ].map((name, idx) => (
                 <div
                   key={name}
@@ -372,9 +372,9 @@ const About = () => {
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 md:gap-10 max-w-4xl mx-auto">
               {[
+                'Sophie Ogutu',
                 'Michelle Kabucho',
-                'Anne Wanjiku',
-                'Sophie Ogutu'
+                'Anne Wanjiku'
               ].map((name, idx) => (
                 <div
                   key={name}
