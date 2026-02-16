@@ -118,6 +118,35 @@ const Gallery = () => {
     setSelectedImage(filteredImages[newIndex]);
   }, [selectedImage, filteredImages]);
 
+  // Swipe handlers for mobile
+  const touchStartRef = useRef(null);
+  const touchEndRef = useRef(null);
+
+  const minSwipeDistance = 50;
+
+  const onTouchStart = (e) => {
+    touchEndRef.current = null;
+    touchStartRef.current = e.targetTouches[0].clientX;
+  };
+
+  const onTouchMove = (e) => {
+    touchEndRef.current = e.targetTouches[0].clientX;
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStartRef.current || !touchEndRef.current) return;
+    const distance = touchStartRef.current - touchEndRef.current;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+
+    if (isLeftSwipe) {
+      navigateImage('next');
+    }
+    if (isRightSwipe) {
+      navigateImage('prev');
+    }
+  };
+
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (selectedImage) {
@@ -338,8 +367,8 @@ const Gallery = () => {
             <>
               {/* Image Grid — masonry / grid with editorial cards */}
               <div className={viewMode === 'grid' 
-                ? 'grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5 md:gap-6'
-                : 'columns-2 sm:columns-3 lg:columns-4 gap-5 md:gap-6 space-y-5 md:space-y-6'
+                ? 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 md:gap-6'
+                : 'columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-4 sm:gap-5 md:gap-6 space-y-4 sm:space-y-5 md:space-y-6'
               }>
                 {paginatedImages.map((image, index) => (
                   <div
@@ -446,6 +475,9 @@ const Gallery = () => {
         <div
           className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-4 animate-fade-in"
           onClick={closeLightbox}
+          onTouchStart={onTouchStart}
+          onTouchMove={onTouchMove}
+          onTouchEnd={onTouchEnd}
         >
           {/* Close Button */}
           <button
@@ -458,36 +490,6 @@ const Gallery = () => {
             </svg>
           </button>
 
-          {/* Navigation Buttons */}
-          {filteredImages.length > 1 && (
-            <>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  navigateImage('prev');
-                }}
-                className="absolute left-2 sm:left-4 md:left-8 top-1/2 -translate-y-1/2 z-10 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-full p-2 sm:p-3 transition-all duration-300 group touch-manipulation"
-                aria-label="Previous image"
-              >
-                <svg className="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                </svg>
-              </button>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  navigateImage('next');
-                }}
-                className="absolute right-2 sm:right-4 md:right-8 top-1/2 -translate-y-1/2 z-10 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-full p-2 sm:p-3 transition-all duration-300 group touch-manipulation"
-                aria-label="Next image"
-              >
-                <svg className="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              </button>
-            </>
-          )}
-
           {/* Image Counter */}
           {filteredImages.length > 1 && (
             <div className="absolute bottom-4 md:bottom-8 left-1/2 -translate-x-1/2 z-10 bg-white/10 backdrop-blur-md rounded-full px-4 py-2">
@@ -499,7 +501,7 @@ const Gallery = () => {
 
           {/* Image Container */}
           <div
-            className="relative max-w-7xl max-h-[90vh] w-full h-full flex flex-col items-center justify-center px-12 sm:px-16 md:px-20"
+            className="relative max-w-7xl max-h-[90vh] w-full h-full flex flex-col items-center justify-center"
             onClick={(e) => e.stopPropagation()}
           >
             <img
