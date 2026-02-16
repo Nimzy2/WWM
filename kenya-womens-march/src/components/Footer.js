@@ -147,9 +147,16 @@ const Footer = () => {
                   <p className="text-sm font-medium mb-2 text-white/80">Communications</p>
                   <a 
                     href="mailto:communications@worldmarchofwomenkenya.co.ke"
-                    className="text-xs sm:text-sm md:text-base break-all hover:text-white transition-colors duration-300 leading-relaxed"
+                    className="text-xs sm:text-sm md:text-base hover:text-white transition-colors duration-300 leading-relaxed"
+                    style={{ 
+                      wordBreak: 'break-word',
+                      overflowWrap: 'break-word',
+                      display: 'block',
+                      hyphens: 'auto'
+                    }}
                   >
-                    communications@worldmarchofwomenkenya.co.ke
+                    communications@worldmarchofwomenkenya.
+                    <span style={{ whiteSpace: 'nowrap' }}>co.ke</span>
                   </a>
                 </div>
                 <div>
