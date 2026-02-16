@@ -147,7 +147,7 @@ const Footer = () => {
                   <p className="text-sm font-medium mb-2 text-white/80">Communications</p>
                   <a 
                     href="mailto:communications@worldmarchofwomenkenya.co.ke"
-                    className="text-sm md:text-base break-words hover:text-white transition-colors duration-300"
+                    className="text-xs sm:text-sm md:text-base break-all hover:text-white transition-colors duration-300 leading-relaxed"
                   >
                     communications@worldmarchofwomenkenya.co.ke
                   </a>

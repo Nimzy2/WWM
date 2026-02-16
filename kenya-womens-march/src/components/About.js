@@ -373,8 +373,8 @@ const About = () => {
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 md:gap-10 max-w-4xl mx-auto">
               {[
                 'Sophie Ogutu',
-                'Michelle Kabucho',
-                'Anne Wanjiku'
+                'Anne Wanjiku',
+                'Michelle Kabucho'
               ].map((name, idx) => (
                 <div
                   key={name}
