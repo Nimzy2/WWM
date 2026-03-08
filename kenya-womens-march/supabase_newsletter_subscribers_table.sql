@@ -38,6 +38,10 @@ CREATE POLICY "Allow self unsubscribe" ON newsletter_subscribers
 CREATE POLICY "Allow admin view" ON newsletter_subscribers
     FOR SELECT USING (auth.role() = 'authenticated');
 
+-- Allow authenticated users to delete subscribers (for admin)
+CREATE POLICY "Allow admin delete" ON newsletter_subscribers
+    FOR DELETE USING (auth.role() = 'authenticated');
+
 -- Create function to update updated_at timestamp
 CREATE OR REPLACE FUNCTION update_updated_at_column()
 RETURNS TRIGGER AS $$

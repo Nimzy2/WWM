@@ -133,7 +133,7 @@ const Footer = () => {
                     onClick={(e) => handleLinkClick(e, '/admin/login')}
                     className="text-accent/90 hover:text-white transition-colors duration-300 text-base"
                   >
-                    Admin Login
+                    Admin
                   </Link>
                 </li>
               </ul>
