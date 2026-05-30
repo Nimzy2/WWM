@@ -324,8 +324,8 @@ const About = () => {
               {[
                 'Sophie Ogutu',
                 'Beatrice Kamau',
-                'Anne Wanjiru',
-                'Esther Mwakali',
+                'Anne Wanjiku',
+                'Esther Mwikali',
                 'Millicent Awino',
                 'Michelle Kabucho',
                 'Terry Ochola',
