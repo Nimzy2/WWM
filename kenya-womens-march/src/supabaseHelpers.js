@@ -978,3 +978,225 @@ export async function getGalleryImageMetadata(fileName) {
     throw error;
   }
 }
+
+// TEAM SECTION CRUD
+export const DEFAULT_TEAM_DATA = {
+  sectionTitle: 'Meet Our Team',
+  groups: [
+    {
+      id: 'default-working-team',
+      title: 'Working Team',
+      display_order: 0,
+      layout: 'compact',
+      members: [
+        { id: 'wt-1', name: 'Sophie Ogutu', photo_url: '/team/sophie-ogutu.jpeg', display_order: 0, image_object_position: 'center' },
+        { id: 'wt-2', name: 'Beatrice Kamau', photo_url: '/team/beatrice-kamau.jpeg', display_order: 1, image_object_position: 'center' },
+        { id: 'wt-3', name: 'Anne Wanjiru', photo_url: '/team/anne-wanjiku.jpeg', display_order: 2, image_object_position: 'center' },
+        { id: 'wt-4', name: 'Esther Mwakali', photo_url: '/team/esther-mwakali.jpeg', display_order: 3, image_object_position: 'center' },
+        { id: 'wt-5', name: 'Millicent Awino', photo_url: '/team/millicent-awino.jpeg', display_order: 4, image_object_position: 'top' },
+        { id: 'wt-6', name: 'Michelle Kabucho', photo_url: '/team/michelle-kabucho.jpeg', display_order: 5, image_object_position: 'center' },
+        { id: 'wt-7', name: 'Terry Ochola', photo_url: '/team/terry-ochola.jpeg', display_order: 6, image_object_position: 'center' },
+        { id: 'wt-8', name: 'Lydia Dola', photo_url: '/team/lydia-dola.jpeg', display_order: 7, image_object_position: 'center' },
+        { id: 'wt-9', name: 'Regina Mutiru', photo_url: '/team/regina-mutiru.jpeg', display_order: 8, image_object_position: 'center' },
+        { id: 'wt-10', name: 'Comfort Achieng', photo_url: '/team/comfort-achieng.jpeg', display_order: 9, image_object_position: 'center' }
+      ]
+    },
+    {
+      id: 'default-secretariat',
+      title: 'Our Secretariat',
+      display_order: 1,
+      layout: 'featured',
+      members: [
+        { id: 'sec-1', name: 'Sophie Ogutu', photo_url: '/team/sophie-ogutu.jpeg', display_order: 0, image_object_position: 'center' },
+        { id: 'sec-2', name: 'Anne Wanjiku', photo_url: '/team/anne-wanjiku.jpeg', display_order: 1, image_object_position: 'center' },
+        { id: 'sec-3', name: 'Michelle Kabucho', photo_url: '/team/michelle-kabucho.jpeg', display_order: 2, image_object_position: 'center' }
+      ]
+    }
+  ]
+};
+
+function sortTeamMembers(members = []) {
+  return [...members].sort((a, b) => a.display_order - b.display_order);
+}
+
+function sortTeamGroups(groups = []) {
+  return [...groups]
+    .sort((a, b) => a.display_order - b.display_order)
+    .map((group) => ({
+      ...group,
+      members: sortTeamMembers(group.members || group.team_members || [])
+    }));
+}
+
+export async function fetchTeamSectionData() {
+  try {
+    const [{ data: sectionRows, error: sectionError }, { data: groups, error: groupsError }] = await Promise.all([
+      supabase.from('team_section').select('title').limit(1),
+      supabase.from('team_groups').select('*, team_members(*)').order('display_order', { ascending: true })
+    ]);
+
+    if (sectionError?.code === '42P01' || groupsError?.code === '42P01') {
+      return DEFAULT_TEAM_DATA;
+    }
+
+    if (groupsError) {
+      throw groupsError;
+    }
+
+    if (!groups || groups.length === 0) {
+      return DEFAULT_TEAM_DATA;
+    }
+
+    const normalizedGroups = sortTeamGroups(
+      groups.map((group) => ({
+        ...group,
+        members: group.team_members || []
+      }))
+    );
+
+    return {
+      sectionTitle: sectionRows?.[0]?.title || DEFAULT_TEAM_DATA.sectionTitle,
+      groups: normalizedGroups
+    };
+  } catch (error) {
+    console.warn('Error fetching team section data, using defaults:', error);
+    return DEFAULT_TEAM_DATA;
+  }
+}
+
+async function requireAuth() {
+  const { data: { session }, error } = await supabase.auth.getSession();
+  if (error || !session) {
+    throw new Error('You must be logged in to perform this action.');
+  }
+}
+
+export async function updateTeamSectionTitle(title) {
+  await requireAuth();
+
+  const { data: existing, error: fetchError } = await supabase
+    .from('team_section')
+    .select('id')
+    .limit(1)
+    .maybeSingle();
+
+  if (fetchError && fetchError.code !== '42P01') {
+    throw new Error(fetchError.message || 'Failed to update team section title.');
+  }
+
+  if (existing?.id) {
+    const { error } = await supabase
+      .from('team_section')
+      .update({ title })
+      .eq('id', existing.id);
+    if (error) throw new Error(error.message || 'Failed to update team section title.');
+    return;
+  }
+
+  const { error } = await supabase.from('team_section').insert({ title });
+  if (error) throw new Error(error.message || 'Failed to create team section title.');
+}
+
+export async function createTeamGroup({ title, layout = 'compact', display_order = 0 }) {
+  await requireAuth();
+
+  const { data, error } = await supabase
+    .from('team_groups')
+    .insert({ title, layout, display_order })
+    .select()
+    .single();
+
+  if (error) throw new Error(error.message || 'Failed to create team group.');
+  return data;
+}
+
+export async function updateTeamGroup(id, updates) {
+  await requireAuth();
+
+  const { data, error } = await supabase
+    .from('team_groups')
+    .update(updates)
+    .eq('id', id)
+    .select()
+    .single();
+
+  if (error) throw new Error(error.message || 'Failed to update team group.');
+  return data;
+}
+
+export async function deleteTeamGroup(id) {
+  await requireAuth();
+
+  const { error } = await supabase.from('team_groups').delete().eq('id', id);
+  if (error) throw new Error(error.message || 'Failed to delete team group.');
+}
+
+export async function createTeamMember({ group_id, name, photo_url, display_order = 0, image_object_position = 'center' }) {
+  await requireAuth();
+
+  const { data, error } = await supabase
+    .from('team_members')
+    .insert({ group_id, name, photo_url, display_order, image_object_position })
+    .select()
+    .single();
+
+  if (error) throw new Error(error.message || 'Failed to create team member.');
+  return data;
+}
+
+export async function updateTeamMember(id, updates) {
+  await requireAuth();
+
+  const { data, error } = await supabase
+    .from('team_members')
+    .update(updates)
+    .eq('id', id)
+    .select()
+    .single();
+
+  if (error) throw new Error(error.message || 'Failed to update team member.');
+  return data;
+}
+
+export async function deleteTeamMember(id) {
+  await requireAuth();
+
+  const { error } = await supabase.from('team_members').delete().eq('id', id);
+  if (error) throw new Error(error.message || 'Failed to delete team member.');
+}
+
+export async function uploadTeamPhoto(file) {
+  await requireAuth();
+
+  const fileExtension = file.name.split('.').pop().toLowerCase();
+  const allowedTypes = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+  if (!allowedTypes.includes(fileExtension)) {
+    throw new Error('Invalid file type. Only image files are allowed.');
+  }
+
+  const maxSize = 10 * 1024 * 1024;
+  if (file.size > maxSize) {
+    throw new Error('File size exceeds 10MB limit.');
+  }
+
+  const timestamp = Date.now();
+  const sanitizedFileName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
+  const filePath = `${timestamp}-${sanitizedFileName}`;
+
+  const { data, error } = await supabase.storage
+    .from('team')
+    .upload(filePath, file, {
+      cacheControl: '3600',
+      upsert: false
+    });
+
+  if (error) {
+    if (error.message?.includes('Bucket not found') || error.statusCode === 404) {
+      throw new Error('Team storage bucket not found. Create a public "team" bucket in Supabase Storage.');
+    }
+    throw new Error(error.message || 'Failed to upload team photo.');
+  }
+
+  const { data: urlData } = supabase.storage.from('team').getPublicUrl(data.path);
+  return urlData.publicUrl;
+}
