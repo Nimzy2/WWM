@@ -31,6 +31,8 @@ import PublicationEditor from './components/PublicationEditor';
 import Gallery from './components/Gallery';
 import GalleryAdmin from './components/GalleryAdmin';
 import GalleryManagement from './components/GalleryManagement';
+import AdminEntry from './components/AdminEntry';
+import TeamManagement from './components/TeamManagement';
 
 function App() {
   return (
@@ -71,6 +73,7 @@ function App() {
                 <Route path="/test-dashboard" element={<TestDashboard />} />
                 
                 {/* Admin Routes */}
+                <Route path="/admin" element={<AdminEntry />} />
                 <Route path="/admin/login" element={<AdminLogin />} />
                 <Route
                   path="/admin/dashboard"
@@ -165,6 +168,14 @@ function App() {
                   element={
                     <ProtectedRoute allowedRoles={['admin']}>
                       <GalleryManagement />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin/team"
+                  element={
+                    <ProtectedRoute allowedRoles={['admin']}>
+                      <TeamManagement />
                     </ProtectedRoute>
                   }
                 />
