@@ -178,6 +178,12 @@ const AdminDashboard = () => {
               >
                 Manage Captions
               </Link>
+              <Link
+                to="/admin/team"
+                className="bg-white text-primary border-2 border-primary px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold hover:bg-primary hover:text-white transition-colors duration-200 text-sm sm:text-base"
+              >
+                Manage Team
+              </Link>
             </>
           )}
           {!isWriter && (
