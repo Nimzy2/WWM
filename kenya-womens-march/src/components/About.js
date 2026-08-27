@@ -315,23 +315,23 @@ const About = () => {
             <div className="w-12 h-1 sm:w-16 sm:h-0.5 bg-[#43245A] mx-auto mt-4 rounded-full opacity-90" aria-hidden="true" />
           </header>
 
-          {/* Subsection: Working Team */}
+          {/* Subsection: Coordination Team */}
           <div className="mb-16 sm:mb-20 md:mb-24">
             <h3 className="text-xs sm:text-sm font-semibold text-[#B6A8C1] uppercase tracking-[0.25em] text-center mb-8 sm:mb-10 md:mb-12">
-              Working Team
+              Coordination Team
             </h3>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6 md:gap-8">
               {[
                 'Sophie Ogutu',
-                'Beatrice Kamau',
                 'Anne Wanjiku',
+                'Beatrice Kamau',
+                'Comfort Achieng'
                 'Esther Mwikali',
                 'Millicent Awino',
                 'Michelle Kabucho',
                 'Terry Ochola',
                 'Lydia Dola',
                 'Regina Mutiru',
-                'Comfort Achieng'
               ].map((name, idx) => (
                 <div
                   key={name}
