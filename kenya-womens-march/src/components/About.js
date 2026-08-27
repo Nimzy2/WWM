@@ -328,7 +328,6 @@ const About = () => {
                 'Comfort Achieng'
                 'Esther Mwikali',
                 'Millicent Awino',
-                'Michelle Kabucho',
                 'Terry Ochola',
                 'Lydia Dola',
                 'Regina Mutiru',
@@ -374,7 +373,6 @@ const About = () => {
               {[
                 'Sophie Ogutu',
                 'Anne Wanjiku',
-                'Michelle Kabucho'
               ].map((name, idx) => (
                 <div
                   key={name}
