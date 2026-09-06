@@ -94,6 +94,25 @@ const getMemberPhotoUrl = (member) => {
 const getMemberPlaceholder = (name) =>
   `data:image/svg+xml,%3Csvg width='400' height='400' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100%25' height='100%25' fill='%23B6A8C1'/%3E%3Ctext x='50%25' y='50%25' font-family='Arial' font-size='24' fill='%2343245A' text-anchor='middle' dy='.3em'%3E${name.split(' ').map((part) => part[0]).join('')}%3C/text%3E%3C/svg%3E`;
 
+const getMemberPhotoStyles = (member) => {
+  const position = member.image_object_position || 'top';
+
+  if (position === 'contain') {
+    return { objectFit: 'contain', objectPosition: 'center' };
+  }
+
+  const positionMap = {
+    center: 'center',
+    top: 'top',
+    bottom: 'bottom'
+  };
+
+  return {
+    objectFit: 'cover',
+    objectPosition: positionMap[position] || 'top'
+  };
+};
+
 const About = () => {
   // Fetch stats from Supabase
   const [stats, setStats] = useState([
@@ -365,7 +384,8 @@ const About = () => {
                             <img
                               src={getMemberPhotoUrl(member)}
                               alt={member.name}
-                              className={`w-full h-full object-cover transition-all duration-500 group-hover:scale-105 ${member.image_object_position === 'top' ? 'object-top' : ''}`}
+                              className="w-full h-full transition-all duration-500 group-hover:scale-105"
+                              style={getMemberPhotoStyles(member)}
                               onError={(e) => {
                                 e.target.src = getMemberPlaceholder(member.name);
                               }}
