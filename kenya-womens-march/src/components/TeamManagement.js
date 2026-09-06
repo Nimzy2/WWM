@@ -56,6 +56,7 @@ const TeamManagement = () => {
 
   useEffect(() => {
     loadTeamData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- loadTeamData is stable, only run on mount
   }, []);
 
   const handleSaveSectionTitle = async () => {
