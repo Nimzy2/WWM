@@ -1203,14 +1203,6 @@ export async function uploadTeamPhoto(file) {
     }
 
     lastError = error;
-    const bucketMissing =
-      error.message?.includes('Bucket not found') ||
-      error.message?.includes('not found') ||
-      error.statusCode === 404;
-
-    if (!bucketMissing) {
-      throw new Error(error.message || 'Failed to upload team photo.');
-    }
   }
 
   throw new Error(
