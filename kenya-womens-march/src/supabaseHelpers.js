@@ -1181,22 +1181,40 @@ export async function uploadTeamPhoto(file) {
 
   const timestamp = Date.now();
   const sanitizedFileName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
-  const filePath = `${timestamp}-${sanitizedFileName}`;
+  const fileName = `${timestamp}-${sanitizedFileName}`;
+  const buckets = [
+    { name: 'team', path: fileName },
+    { name: 'gallery', path: `team/${fileName}` }
+  ];
 
-  const { data, error } = await supabase.storage
-    .from('team')
-    .upload(filePath, file, {
-      cacheControl: '3600',
-      upsert: false
-    });
+  let lastError = null;
 
-  if (error) {
-    if (error.message?.includes('Bucket not found') || error.statusCode === 404) {
-      throw new Error('Team storage bucket not found. Create a public "team" bucket in Supabase Storage.');
+  for (const bucket of buckets) {
+    const { data, error } = await supabase.storage
+      .from(bucket.name)
+      .upload(bucket.path, file, {
+        cacheControl: '3600',
+        upsert: false
+      });
+
+    if (!error) {
+      const { data: urlData } = supabase.storage.from(bucket.name).getPublicUrl(data.path);
+      return urlData.publicUrl;
     }
-    throw new Error(error.message || 'Failed to upload team photo.');
+
+    lastError = error;
+    const bucketMissing =
+      error.message?.includes('Bucket not found') ||
+      error.message?.includes('not found') ||
+      error.statusCode === 404;
+
+    if (!bucketMissing) {
+      throw new Error(error.message || 'Failed to upload team photo.');
+    }
   }
 
-  const { data: urlData } = supabase.storage.from('team').getPublicUrl(data.path);
-  return urlData.publicUrl;
+  throw new Error(
+    lastError?.message ||
+      'Could not upload photo. Create a public "team" or "gallery" bucket in Supabase Storage, or paste a photo URL instead.'
+  );
 }
