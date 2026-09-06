@@ -92,7 +92,7 @@ BEGIN
         RETURNING id INTO working_group_id;
 
         INSERT INTO team_members (group_id, name, photo_url, display_order, image_object_position) VALUES
-            (working_group_id, 'Sophie Ogutu', '/team/sophie-ogutu.jpeg', 0, 'center'),
+            (working_group_id, 'Sophie Ogutu', '/team/sophie-ogutu.jpeg', 0, 'contain'),
             (working_group_id, 'Beatrice Kamau', '/team/beatrice-kamau.jpeg', 1, 'center'),
             (working_group_id, 'Anne Wanjiru', '/team/anne-wanjiku.jpeg', 2, 'center'),
             (working_group_id, 'Esther Mwakali', '/team/esther-mwakali.jpeg', 3, 'center'),
@@ -108,7 +108,7 @@ BEGIN
         RETURNING id INTO secretariat_group_id;
 
         INSERT INTO team_members (group_id, name, photo_url, display_order, image_object_position) VALUES
-            (secretariat_group_id, 'Sophie Ogutu', '/team/sophie-ogutu.jpeg', 0, 'center'),
+            (secretariat_group_id, 'Sophie Ogutu', '/team/sophie-ogutu.jpeg', 0, 'contain'),
             (secretariat_group_id, 'Anne Wanjiku', '/team/anne-wanjiku.jpeg', 1, 'center'),
             (secretariat_group_id, 'Michelle Kabucho', '/team/michelle-kabucho.jpeg', 2, 'center');
     END IF;
