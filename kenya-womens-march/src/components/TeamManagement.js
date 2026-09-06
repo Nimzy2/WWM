@@ -16,7 +16,7 @@ import Notification from './Notification';
 const emptyMemberForm = {
   name: '',
   photo_url: '',
-  image_object_position: 'center'
+  image_object_position: 'top'
 };
 
 const TeamManagement = () => {
@@ -340,14 +340,16 @@ const TeamManagement = () => {
         </div>
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Photo Position</label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Photo Display</label>
         <select
           value={memberForm.image_object_position}
           onChange={(e) => setMemberForm((prev) => ({ ...prev, image_object_position: e.target.value }))}
           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/40 focus:border-primary"
         >
-          <option value="center">Center</option>
-          <option value="top">Top</option>
+          <option value="top">Crop – focus on top (best for faces)</option>
+          <option value="center">Crop – centered</option>
+          <option value="bottom">Crop – focus on bottom</option>
+          <option value="contain">Show full photo (no cropping)</option>
         </select>
       </div>
       <div className="flex gap-2">
@@ -532,8 +534,20 @@ const TeamManagement = () => {
                             <img
                               src={member.photo_url}
                               alt={member.name}
-                              className="w-16 h-16 rounded-full object-cover border flex-shrink-0"
-                              style={{ objectPosition: member.image_object_position === 'top' ? 'top' : 'center' }}
+                              className="w-16 h-16 rounded-full border flex-shrink-0 bg-[#B6A8C1]/10"
+                              style={
+                                member.image_object_position === 'contain'
+                                  ? { objectFit: 'contain', objectPosition: 'center' }
+                                  : {
+                                      objectFit: 'cover',
+                                      objectPosition:
+                                        member.image_object_position === 'bottom'
+                                          ? 'bottom'
+                                          : member.image_object_position === 'center'
+                                          ? 'center'
+                                          : 'top'
+                                    }
+                              }
                             />
                           ) : (
                             <div className="w-16 h-16 rounded-full bg-[#B6A8C1] flex items-center justify-center text-primary font-bold flex-shrink-0">
