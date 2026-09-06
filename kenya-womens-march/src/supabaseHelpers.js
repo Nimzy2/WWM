@@ -989,7 +989,7 @@ export const DEFAULT_TEAM_DATA = {
       display_order: 0,
       layout: 'compact',
       members: [
-        { id: 'wt-1', name: 'Sophie Ogutu', photo_url: '/team/sophie-ogutu.jpeg', display_order: 0, image_object_position: 'center' },
+        { id: 'wt-1', name: 'Sophie Ogutu', photo_url: '/team/sophie-ogutu.jpeg', display_order: 0, image_object_position: 'contain' },
         { id: 'wt-2', name: 'Beatrice Kamau', photo_url: '/team/beatrice-kamau.jpeg', display_order: 1, image_object_position: 'center' },
         { id: 'wt-3', name: 'Anne Wanjiru', photo_url: '/team/anne-wanjiku.jpeg', display_order: 2, image_object_position: 'center' },
         { id: 'wt-4', name: 'Esther Mwakali', photo_url: '/team/esther-mwakali.jpeg', display_order: 3, image_object_position: 'center' },
@@ -1007,7 +1007,7 @@ export const DEFAULT_TEAM_DATA = {
       display_order: 1,
       layout: 'featured',
       members: [
-        { id: 'sec-1', name: 'Sophie Ogutu', photo_url: '/team/sophie-ogutu.jpeg', display_order: 0, image_object_position: 'center' },
+        { id: 'sec-1', name: 'Sophie Ogutu', photo_url: '/team/sophie-ogutu.jpeg', display_order: 0, image_object_position: 'contain' },
         { id: 'sec-2', name: 'Anne Wanjiku', photo_url: '/team/anne-wanjiku.jpeg', display_order: 1, image_object_position: 'center' },
         { id: 'sec-3', name: 'Michelle Kabucho', photo_url: '/team/michelle-kabucho.jpeg', display_order: 2, image_object_position: 'center' }
       ]
@@ -1131,7 +1131,7 @@ export async function deleteTeamGroup(id) {
   if (error) throw new Error(error.message || 'Failed to delete team group.');
 }
 
-export async function createTeamMember({ group_id, name, photo_url, display_order = 0, image_object_position = 'center' }) {
+export async function createTeamMember({ group_id, name, photo_url, display_order = 0, image_object_position = 'top' }) {
   await requireAuth();
 
   const { data, error } = await supabase
