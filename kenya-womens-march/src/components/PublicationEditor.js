@@ -201,7 +201,7 @@ const PublicationEditor = () => {
       setUploadProgress('');
       setSelectedFile(null);
       
-      // Show detailed error in notification
+      // Show detailed error in notification 
       setNotification({ 
         message: errorMessage, 
         type: 'error' 
