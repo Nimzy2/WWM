@@ -63,10 +63,27 @@ export const AdminProvider = ({ children }) => {
   }, []);
 
   const login = async (email, password) => {
+    const trimmedEmail = (email || '').trim();
+    const trimmedPassword = (password || '').trim();
+
+    if (!trimmedEmail || !trimmedPassword) {
+      return {
+        success: false,
+        error: 'Email and password are required.'
+      };
+    }
+
+    if (trimmedPassword.length < 6) {
+      return {
+        success: false,
+        error: 'Password must be at least 6 characters.'
+      };
+    }
+
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password
+        email: trimmedEmail,
+        password: trimmedPassword
       });
 
       if (error) {
