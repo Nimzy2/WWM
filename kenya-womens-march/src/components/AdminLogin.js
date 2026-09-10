@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAdmin } from '../contexts/AdminContext';
 
 const AdminLogin = () => {
@@ -9,16 +9,43 @@ const AdminLogin = () => {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [loginType, setLoginType] = useState('admin'); // 'admin' or 'writer'
-  const { login, logout } = useAdmin();
+  const { login, logout, isAuthenticated, isLoading: authLoading, role } = useAdmin();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (authLoading || !isAuthenticated) return;
+
+    const from = location.state?.from?.pathname;
+    if (from && from.startsWith('/admin') && from !== '/admin/login') {
+      navigate(from, { replace: true });
+      return;
+    }
+
+    navigate(role === 'writer' ? '/admin/posts' : '/admin/dashboard', { replace: true });
+  }, [authLoading, isAuthenticated, role, navigate, location.state]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+
+    const trimmedEmail = email.trim();
+    const trimmedPassword = password.trim();
+
+    if (!trimmedEmail || !trimmedPassword) {
+      setError('Email and password are required.');
+      return;
+    }
+
+    if (trimmedPassword.length < 6) {
+      setError('Password must be at least 6 characters.');
+      return;
+    }
+
     setIsLoading(true);
 
     try {
-      const result = await login(email, password);
+      const result = await login(trimmedEmail, trimmedPassword);
 
       if (result.success) {
         // Get the actual user role from the result
@@ -59,11 +86,13 @@ const AdminLogin = () => {
         }
 
         // Only reach here if roles match exactly
-        // Role matches - proceed with login
-        if (actualUserRole === 'writer') {
-          navigate('/admin/posts');
+        const from = location.state?.from?.pathname;
+        if (from && from.startsWith('/admin') && from !== '/admin/login') {
+          navigate(from, { replace: true });
+        } else if (actualUserRole === 'writer') {
+          navigate('/admin/posts', { replace: true });
         } else {
-          navigate('/admin/dashboard');
+          navigate('/admin/dashboard', { replace: true });
         }
       } else {
         setError(result.error || 'Invalid credentials. Please try again.');
@@ -74,6 +103,14 @@ const AdminLogin = () => {
       setIsLoading(false);
     }
   };
+
+  if (authLoading || isAuthenticated) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="text-accent text-lg">Checking admin access...</div>
+      </div>
+    );
+  }
 
   return (
     <div 
@@ -95,7 +132,7 @@ const AdminLogin = () => {
             Admin Portal Login
           </h2>
           <p className="mt-2 text-center text-sm text-text">
-            Sign in to access the admin dashboard
+            Enter your email and password to access the admin dashboard
           </p>
         </div>
 
@@ -169,8 +206,10 @@ const AdminLogin = () => {
                 name="password"
                 type={showPassword ? 'text' : 'password'}
                 required
+                minLength={6}
+                autoComplete="current-password"
                 className="appearance-none rounded-none relative block w-full px-3 py-2 pr-11 border border-accent placeholder-gray-500 text-primary rounded-b-md focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm"
-                placeholder="Password"
+                placeholder="Password (required)"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
@@ -197,7 +236,7 @@ const AdminLogin = () => {
           <div>
             <button
               type="submit"
-              disabled={isLoading}
+              disabled={isLoading || !email.trim() || !password.trim()}
               className={`group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-primary hover:bg-accent hover:text-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors duration-200 ${
                 isLoading ? 'opacity-50 cursor-not-allowed' : ''
               }`}
