@@ -15,7 +15,7 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
   }
 
   if (!isAuthenticated) {
-    return <Navigate to="/admin/login" replace />;
+    return <Navigate to="/admin/login" replace state={{ from: location }} />;
   }
 
   if (Array.isArray(allowedRoles) && allowedRoles.length > 0) {
