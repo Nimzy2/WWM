@@ -65,7 +65,14 @@ function App() {
                 <Route path="/join" element={<Join />} />
                 <Route path="/publications" element={<Publications />} />
                 <Route path="/gallery" element={<Gallery />} />
-                <Route path="/newsletter-admin" element={<NewsletterAdmin />} />
+                <Route
+                  path="/newsletter-admin"
+                  element={
+                    <ProtectedRoute allowedRoles={['admin']}>
+                      <NewsletterAdmin />
+                    </ProtectedRoute>
+                  }
+                />
                 <Route path="/unsubscribe" element={<NewsletterUnsubscribe />} />
                 <Route path="/test" element={<FormTester />} />
                 <Route path="/db-test" element={<DatabaseTest />} />
