@@ -14,7 +14,7 @@ const AdminEntry = () => {
   }
 
   if (!isAuthenticated) {
-    return <Navigate to="/admin/login" replace />;
+    return <Navigate to="/admin/login" replace state={{ from: { pathname: '/admin' } }} />;
   }
 
   const destination = role === 'writer' ? '/admin/posts' : '/admin/dashboard';
