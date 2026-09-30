@@ -33,6 +33,7 @@ import GalleryAdmin from './components/GalleryAdmin';
 import GalleryManagement from './components/GalleryManagement';
 import AdminEntry from './components/AdminEntry';
 import TeamManagement from './components/TeamManagement';
+import UserManagement from './components/UserManagement';
 
 function App() {
   return (
@@ -183,6 +184,14 @@ function App() {
                   element={
                     <ProtectedRoute allowedRoles={['admin']}>
                       <TeamManagement />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin/users"
+                  element={
+                    <ProtectedRoute allowedRoles={['admin']}>
+                      <UserManagement />
                     </ProtectedRoute>
                   }
                 />
