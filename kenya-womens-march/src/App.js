@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { AdminProvider } from './contexts/AdminContext';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -34,16 +34,29 @@ import GalleryManagement from './components/GalleryManagement';
 import AdminEntry from './components/AdminEntry';
 import TeamManagement from './components/TeamManagement';
 import UserManagement from './components/UserManagement';
+import MwanzoMpya from './components/MwanzoMpya';
 
 function App() {
   return (
     <ErrorBoundary>
       <AdminProvider>
         <Router>
+          <AppShell />
+        </Router>
+      </AdminProvider>
+    </ErrorBoundary>
+  );
+}
+
+function AppShell() {
+  const standalone = useLocation().pathname === '/mwanzo-mpya';
+
+  return (
+    <>
           <ScrollToTop />
           <div 
             className="App min-h-screen flex flex-col relative"
-            style={{
+            style={standalone ? undefined : {
               backgroundImage: `url(/codioful.jpg)`,
               backgroundSize: 'cover',
               backgroundPosition: 'center',
@@ -51,11 +64,12 @@ function App() {
               backgroundAttachment: 'fixed'
             }}
           >
-            {/* Overlay for better readability */}
-            <div className="absolute inset-0 bg-black/20 pointer-events-none"></div>
+            {!standalone && (
+              <div className="absolute inset-0 bg-black/20 pointer-events-none"></div>
+            )}
             
             <div className="relative z-10 flex flex-col min-h-screen">
-            <Header />
+            {!standalone && <Header />}
             <main className="flex-grow">
               <Routes>
                 <Route path="/" element={<Home />} />
@@ -66,6 +80,7 @@ function App() {
                 <Route path="/join" element={<Join />} />
                 <Route path="/publications" element={<Publications />} />
                 <Route path="/gallery" element={<Gallery />} />
+                <Route path="/mwanzo-mpya" element={<MwanzoMpya />} />
                 <Route
                   path="/newsletter-admin"
                   element={
@@ -205,12 +220,10 @@ function App() {
                 } />
               </Routes>
             </main>
-            <Footer />
+            {!standalone && <Footer />}
             </div>
           </div>
-        </Router>
-      </AdminProvider>
-    </ErrorBoundary>
+    </>
   );
 }
 
