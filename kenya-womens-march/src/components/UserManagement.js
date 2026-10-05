@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAdmin } from '../contexts/AdminContext';
 import { supabase } from '../supabaseClient';
@@ -15,7 +15,7 @@ const UserManagement = () => {
   const [users, setUsers] = useState([]);
   const [message, setMessage] = useState({ type: '', text: '' });
 
-  const describeError = (error) => {
+  const describeError = useCallback((error) => {
     if (error.message?.includes('Failed to fetch') || error.message?.includes('network') || error.message?.includes('Failed to send')) {
       return 'Edge Function not deployed. Deploy it using: supabase functions deploy set-user-role (See USER_MANAGEMENT_GUIDE.md)';
     }
@@ -29,9 +29,9 @@ const UserManagement = () => {
       return 'Access denied. You must be an admin to perform this action.';
     }
     return error.message || 'Failed to send a request to the Edge Function. Please ensure the function is deployed.';
-  };
+  }, []);
 
-  const readInvokeError = async (error, data) => {
+  const readInvokeError = useCallback(async (error, data) => {
     if (data?.error) return data.error;
     if (error?.context && typeof error.context.json === 'function') {
       try {
@@ -42,9 +42,9 @@ const UserManagement = () => {
       }
     }
     return describeError(error);
-  };
+  }, [describeError]);
 
-  const loadUsers = async () => {
+  const loadUsers = useCallback(async () => {
     setUsersLoading(true);
     try {
       const { data: { session }, error: sessionError } = await supabase.auth.getSession();
@@ -74,13 +74,13 @@ const UserManagement = () => {
     } finally {
       setUsersLoading(false);
     }
-  };
+  }, [readInvokeError]);
 
   useEffect(() => {
     if (isAdmin) {
       loadUsers();
     }
-  }, [isAdmin]);
+  }, [isAdmin, loadUsers]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
