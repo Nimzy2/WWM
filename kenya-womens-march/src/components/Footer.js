@@ -127,6 +127,15 @@ const Footer = () => {
                     Contact
                   </Link>
                 </li>
+                <li>
+                  <Link 
+                    to="/mwanzo-mpya" 
+                    onClick={(e) => handleLinkClick(e, '/mwanzo-mpya')}
+                    className="text-accent/90 hover:text-white transition-colors duration-300 text-base"
+                  >
+                    Mwanzo Mpya
+                  </Link>
+                </li>
               </ul>
             </div>
 
