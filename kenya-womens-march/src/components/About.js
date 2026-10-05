@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
 import { fetchTeamSectionData, DEFAULT_TEAM_DATA } from '../supabaseHelpers';
 import SEOHead from './SEOHead';
@@ -451,6 +452,24 @@ const About = () => {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      <section className="py-12 sm:py-16 md:py-20 bg-gradient-to-br from-gray-50 via-white to-purple-50" aria-labelledby="mwanzo-heading">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <span className="text-xs sm:text-sm font-semibold text-[#B6A8C1] uppercase tracking-wider">A sister foundation</span>
+          <h2 id="mwanzo-heading" className="text-3xl sm:text-4xl font-bold text-gray-900 mt-2">
+            Mwanzo Mpya Women&apos;s Foundation
+          </h2>
+          <p className="text-base sm:text-lg text-gray-600 mt-4 leading-relaxed">
+            Mwanzo Mpya — Swahili for &quot;a new beginning&quot; — is a feminist grassroots foundation grown from World March of Women Kenya. It builds collective power and transformative alternatives with communities across Kenya and the African region.
+          </p>
+          <Link
+            to="/mwanzo-mpya"
+            className="inline-flex items-center justify-center mt-6 px-6 py-3 bg-[#43245A] text-white rounded-full font-semibold hover:bg-[#351c48] transition-colors duration-200"
+          >
+            Visit Mwanzo Mpya
+          </Link>
         </div>
       </section>
     </div>
